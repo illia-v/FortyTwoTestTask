@@ -1,0 +1,25 @@
+[{
+  "model": "hello.PersonInfo",
+  "pk": 1,
+  "fields": {
+    "first_name": "Illia",
+    "second_name": "Volochii",
+    "birth_date": "1999-10-10",
+    "bio": "I was born in Ivano-Frankivsk and I live here.<br>I have finished a school and I am a student now.",
+    "email": "illia.volochii@gmail.com",
+    "jabber": "illia-v@42cc.co",
+    "skype": "-",
+    "other_contacts": "Phone number: +38(050)152-16-80"
+  }
+},
+{
+  "model": "auth.User",
+  "pk": 1,
+  "fields": {
+    "username": "admin",
+    "password": "pbkdf2_sha256$12000$zSUkXApOkEX9$rXhVs91ZkA/LlEV8FazWOMiQufaDmF/MxXFqEG3mcuM=",
+    "is_superuser": true,
+    "is_staff": true,
+    "is_active": true
+  }
+}]
