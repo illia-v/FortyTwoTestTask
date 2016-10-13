@@ -4,20 +4,19 @@ var lastRequestId = localStorage.lastSeenRequestId;
 
 function pullNewRequests() {
   // Pulls new requests to a page
-  var $requestsTable = $( "#requests-list " );
-
   $.getJSON(requestsPullingPageURL, {"last_request_id": lastRequestId},
     function(newRequests) {
       for (var i=0; i<newRequests.length; i++) {
         var newRequest = newRequests[i];
 
-        $requestsTable.prepend(
-          $( "<li>" )
-          .html("A URL <a href='" + newRequest.url + "'>" + newRequest.url +
-                "</a> was requested with method " +
-                newRequest.method + " at " + newRequest.timestamp)
-          .data( "request-id", newRequest.id )
-          .addClass( "list-group-item" )
+        $( "tbody", "#requests-table" ).prepend(
+          $( "<tr>" ).data( "request-id", newRequest.id )
+          .append($( "<td>" ).text( newRequest.id ))
+          .append($( "<td>" ).text( newRequest.timestamp ))
+          .append($( "<td>" ).html(
+            $( "<a>" ).attr( "href", newRequest.url ).text( newRequest.url )
+          ))
+          .append($( "<td>" ).text( newRequest.method ))
         );
       }
 
