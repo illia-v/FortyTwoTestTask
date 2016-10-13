@@ -4,16 +4,16 @@
   <div class="row">
     <div class="col-sm-6">
       <div>
-        <p><i>Name:</i> <b>Illia</b></p>
+        <p><i>Name:</i> <b>{{ my_info.first_name }}</b></p>
       </div>
       <div>
-        <p><i>Last name:</i> <b>Volochii</b></p>
+        <p><i>Last name:</i> <b>{{ my_info.second_name }}</b></p>
       </div>
       <div>
-        <p><i>Date of birth:</i> <b>October 10, 1999</b></p>
+        <p><i>Date of birth:</i> <b>{{ my_info.birth_date }}</b></p>
       </div>
       <div>
-        <p><i>Bio:</i><br>I was born in Ivano-Frankivsk and I live here.<br>I have finished a school and I am a student now.</p>
+        <p><i>Bio:</i><br>{{ my_info.bio|safe }}</p>
       </div>
     </div>
 
@@ -23,18 +23,18 @@
         <p>
           <i>Email:</i>
           <a href="mailto:illia.volochii@gmail.com">
-            illia.volochii@gmail.com
+            {{ my_info.email }}
           </a>
         </p>
       </div>
       <div>
-        <p><i>Jabber:</i> illia-v@42cc.co</p>
+        <p><i>Jabber:</i> {{ my_info.jabber }}</p>
       </div>
       <div>
-        <p><i>Skype:</i> -</p>
+        <p><i>Skype:</i> {{ my_info.skype }}</p>
       </div>
       <div>
-        <p><i>Other contacts:</i><br>Phone number: +38(050)152-16-80</p>
+        <p><i>Other contacts:</i><br>{{ my_info.other_contacts|safe }}</p>
       </div>
     </div>
   </div>
