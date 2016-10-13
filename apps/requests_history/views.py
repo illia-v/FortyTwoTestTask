@@ -2,13 +2,16 @@ import json
 
 from django.http import HttpResponse
 from django.utils.formats import date_format
-from django.views.generic import TemplateView, View
+from django.views.generic import ListView, View
 
 from .models import Request
 
 
-class RequestsHistoryView(TemplateView):
-    template_name = 'requests_history/index.html'
+class RequestsHistoryView(ListView):
+    model = Request
+    queryset = model.objects.all().order_by('-id')[:10]
+    context_object_name = 'requests'
+    template_name = 'requests_history/requests_history.html'
 
 
 class RequestsPullingView(View):
