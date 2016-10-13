@@ -11,7 +11,7 @@ class RequestsHistoryView(ListView):
     model = Request
     queryset = model.objects.all().order_by('-id')[:10]
     context_object_name = 'requests'
-    template_name = 'requests_history/requests_history.html'
+    template_name = 'requests_history/index.html'
 
 
 class RequestsPullingView(View):
