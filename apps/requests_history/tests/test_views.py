@@ -1,9 +1,11 @@
 import json
 
+from django.db.models.query import QuerySet
 from django.test import RequestFactory, TestCase
 
 from .model_instances import request
 from .. import views
+from ..models import Request
 
 
 class TestRequestsHistoryView(TestCase):
@@ -11,6 +13,8 @@ class TestRequestsHistoryView(TestCase):
     A test case for a view `RequestsHistoryView`
     """
     def setUp(self):
+        for i in range(11):
+            request()
         self.response = views.RequestsHistoryView.as_view()(
             RequestFactory().get('/requests_history/')
         )
@@ -25,6 +29,28 @@ class TestRequestsHistoryView(TestCase):
                                 'Should use an appropriate template')
         self.assertEqual(self.response.status_code, 200,
                          'Should be callable by anyone')
+
+    def test_requests_history_view_returns_requests(self):
+        """
+        Ensures that `RequestsHistoryView` returns 10 `Request`
+        instances in context
+        """
+        requests = self.response.context_data['requests']
+        self.assertIs(type(requests), QuerySet, 'Should return `QuerySet` '
+                      '`requests` in context')
+        self.assertEqual(len(requests), 10, 'Should return only 10 '
+                         '`PersonInfo` instances `requests` in `QuerySet`')
+
+    def test_requests_history_view_returns_only_10_last_requests(self):
+        """
+        Ensures that `RequestsHistoryView` returns only last 10
+        `Request` instances in context
+        """
+        requests = self.response.context_data['requests']
+        self.assertEqual(list(requests),
+                         list(Request.objects.all().order_by('-id')[:10]),
+                         'Should return only last 10 `Request` instances in '
+                         'context')
 
 
 class TestRequestsPullingView(TestCase):
