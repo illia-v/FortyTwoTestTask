@@ -3,6 +3,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
 from hello import views as hello_views
+from requests_history import views as requests_hisory_views
 admin.autodiscover()
 
 urlpatterns = patterns(
@@ -13,4 +14,10 @@ urlpatterns = patterns(
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', hello_views.HelloView.as_view(), name='hello'),
+    url(r'^requests_history/$',
+        requests_hisory_views.RequestsHistoryView.as_view(),
+        name='requests_history'),
+    url(r'^pull_new_requests/$',
+        requests_hisory_views.RequestsPullingView.as_view(),
+        name='pull_new_requests')
 )
