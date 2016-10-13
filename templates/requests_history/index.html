@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 
 {% block title %}Requests History{% endblock %}
@@ -79,4 +80,12 @@
       </tbody>
     </table>
   </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    var requestsPullingPageURL = "{% url "pull_with_new_requests" %}";
+  </script>
+  <script src="{% static "requests_history/js/pull_new_requests.js" %}">
+  </script>
 {% endblock %}
