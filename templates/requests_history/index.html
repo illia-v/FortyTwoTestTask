@@ -17,66 +17,16 @@
       </thead>
 
       <tbody>
-        <tr data-request-id="{{ request_data.id }}">
-          <td>10</td>
-          <td>Oct. 01, 2016, 00:01 a.m.</td>
-          <td><a href="{{ request_data.url }}">/</a></td>
-          <td>GET</td>
-        </tr>
-        <tr data-request-id="{{ request_data.id }}">
-          <td>9</td>
-          <td>Oct. 01, 2016, 00:01 a.m.</td>
-          <td><a href="{{ request_data.url }}">/</a></td>
-          <td>GET</td>
-        </tr>
-        <tr data-request-id="{{ request_data.id }}">
-          <td>8</td>
-          <td>Oct. 01, 2016, 00:01 a.m.</td>
-          <td><a href="{{ request_data.url }}">/</a></td>
-          <td>GET</td>
-        </tr>
-        <tr data-request-id="{{ request_data.id }}">
-          <td>7</td>
-          <td>Oct. 01, 2016, 00:01 a.m.</td>
-          <td><a href="{{ request_data.url }}">/</a></td>
-          <td>GET</td>
-        </tr>
-        <tr data-request-id="{{ request_data.id }}">
-          <td>6</td>
-          <td>Oct. 01, 2016, 00:01 a.m.</td>
-          <td><a href="{{ request_data.url }}">/</a></td>
-          <td>GET</td>
-        </tr>
-        <tr data-request-id="{{ request_data.id }}">
-          <td>5</td>
-          <td>Oct. 01, 2016, 00:01 a.m.</td>
-          <td><a href="{{ request_data.url }}">/</a></td>
-          <td>GET</td>
-        </tr>
-        <tr data-request-id="{{ request_data.id }}">
-          <td>4</td>
-          <td>Oct. 01, 2016, 00:01 a.m.</td>
-          <td><a href="{{ request_data.url }}">/</a></td>
-          <td>GET</td>
-        </tr>
-        <tr data-request-id="{{ request_data.id }}">
-          <td>3</td>
-          <td>Oct. 01, 2016, 00:01 a.m.</td>
-          <td><a href="{{ request_data.url }}">/</a></td>
-          <td>GET</td>
-        </tr>
-        <tr data-request-id="{{ request_data.id }}">
-          <td>2</td>
-          <td>Oct. 01, 2016, 00:01 a.m.</td>
-          <td><a href="{{ request_data.url }}">/</a></td>
-          <td>GET</td>
-        </tr>
-        <tr data-request-id="{{ request_data.id }}">
-          <td>1</td>
-          <td>Oct. 01, 2016, 00:01 a.m.</td>
-          <td><a href="{{ request_data.url }}">/</a></td>
-          <td>GET</td>
-        </tr>
+        {% for request_data in requests %}
+          <tr data-request-id="{{ request_data.id }}">
+            <td>{{ request_data.id }}</td>
+            <td>{{ request_data.timestamp }}</td>
+            <td>
+              <a href="{{ request_data.url }}">{{ request_data.url }}</a>
+            </td>
+            <td>{{ request_data.method }}</td>
+          </tr>
+        {% endfor %}
       </tbody>
     </table>
   </div>
