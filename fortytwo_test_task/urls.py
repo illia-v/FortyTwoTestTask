@@ -16,5 +16,8 @@ urlpatterns = patterns(
     url(r'^$', hello_views.HelloView.as_view(), name='hello'),
     url(r'^requests_history/$',
         requests_hisory_views.RequestsHistoryView.as_view(),
-        name='requests_history')
+        name='requests_history'),
+    url(r'^pull_new_requests/$',
+        requests_hisory_views.RequestsPullingView.as_view(),
+        name='pull_new_requests')
 )
