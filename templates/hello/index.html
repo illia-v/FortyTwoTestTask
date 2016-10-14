@@ -13,7 +13,9 @@
         <p><i>Date of birth:</i> <b>{{ my_info.birth_date }}</b></p>
       </div>
       <div>
-        <p><i>Bio:</i><br>{{ my_info.bio|safe }}</p>
+        <p><i>Photo:</i></p>
+        <img src="https://avatars0.githubusercontent.com/u/17710133"
+         alt="My photo" width="200px">
       </div>
     </div>
 
@@ -35,6 +37,9 @@
       </div>
       <div>
         <p><i>Other contacts:</i><br>{{ my_info.other_contacts|safe }}</p>
+      </div>
+      <div>
+        <p><i>Bio:</i><br>{{ my_info.bio|safe }}</p>
       </div>
     </div>
   </div>
