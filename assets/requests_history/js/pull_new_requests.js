@@ -8,8 +8,9 @@ function pullNewRequests() {
     function(newRequests) {
       for (var i=0; i<newRequests.length; i++) {
         var newRequest = newRequests[i];
+        var $requestTable = $( "#requests-table" );
 
-        $( "tbody", "#requests-table" ).prepend(
+        $( "tbody", $requestTable ).prepend(
           $( "<tr>" ).data( "request-id", newRequest.id )
           .append($( "<td>" ).text( newRequest.id ))
           .append($( "<td>" ).text( newRequest.timestamp ))
@@ -18,6 +19,8 @@ function pullNewRequests() {
           ))
           .append($( "<td>" ).text( newRequest.method ))
         );
+
+        $( "tr", $requestTable ).last().remove();
       }
 
       // Adding an amount of new requests, added to a page when a user was
