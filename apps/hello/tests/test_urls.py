@@ -14,3 +14,15 @@ class TestHelloURLs(TestCase):
                          'be reversed to the URL `/`')
         self.assertEqual(hello.func.__name__, 'HelloView',
                          'Should be resolved to `HelloView`')
+
+    def test_hello_edit_view_url(self):
+        """
+        Ensures that a URL pattern name `edit_hello` is valid and the
+        pattern is resolved to `HelloEditView`
+        """
+        edit_hello = resolve('/edit_hello/')
+
+        self.assertEqual(reverse('edit_hello'), '/edit_hello/', 'A view name '
+                         '`edit_hello` should be reversed to the URL `/`')
+        self.assertEqual(edit_hello.func.__name__, 'HelloEditView',
+                         'Should be resolved to `HelloEditView`')
