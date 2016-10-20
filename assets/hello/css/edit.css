@@ -1,0 +1,12 @@
+textarea {
+  width: 100%;
+  resize: vertical;
+}
+
+#photo-preview {
+  width: 200px;
+}
+
+#form-btns {
+  margin: 1vh 0;
+}
