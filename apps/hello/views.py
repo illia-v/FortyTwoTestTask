@@ -1,5 +1,13 @@
-from django.views.generic import TemplateView
+import json
+from StringIO import StringIO
 
+from django import http
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.forms.models import model_to_dict
+from django.shortcuts import render
+from django.views.generic import TemplateView, View
+
+from .forms import HelloEditForm
 from .models import PersonInfo
 
 
@@ -12,5 +20,38 @@ class HelloView(TemplateView):
         return context
 
 
-class HelloEditView(TemplateView):
-    template_name = 'hello/edit.html'
+class HelloEditView(View):
+    def get(self, request, *args, **kwargs):
+        form = HelloEditForm(initial=model_to_dict(
+            PersonInfo.objects.first()
+        ))
+        return render(request, 'hello/edit.html', {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        if request.is_ajax():
+            request_data = json.loads(request.body)
+
+            # Photo is base64 encoded on front end because it is
+            # transfered as JSON string via AJAX
+            photo = InMemoryUploadedFile(
+                StringIO(request_data['encoded_photo'].decode('base64')),
+                field_name='photo',
+                name='illia.jpg',
+                content_type='image/jpg',
+                size=len(request_data['encoded_photo']),
+                charset='utf-8',
+            )
+
+            form = HelloEditForm(http.QueryDict(request_data['form_data']),
+                                 {'photo': photo},
+                                 instance=PersonInfo.objects.first())
+
+            if form.is_valid():
+                form.save()
+                return http.HttpResponse(json.dumps({'status': 'success'}),
+                                         content_type='application/json')
+            else:
+                return http.HttpResponseBadRequest('The form data is invalid')
+
+        return http.HttpResponseForbidden('The form can be submited only via '
+                                          'AJAX')
