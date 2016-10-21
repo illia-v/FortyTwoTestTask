@@ -1,3 +1,5 @@
+import re
+
 from django.contrib.auth.models import User
 from django.test import RequestFactory, TestCase
 
@@ -78,25 +80,24 @@ class TestHelloEditView(TestCase):
         self.assertIn('login', response_for_anonymous.url,
                       'Should redirect to login')
 
-    # There is a problem with the test client. It does not get the page
-    # '/edit_hello/' properly. Because of it the test cannot get content
-    # of the page
-    # def test_hello_edit_view_template_output(self):
-    #     """
-    #     Ensures that output of a `HelloEditView` teplate is valid
-    #     """
-    #     self.client.login(username='test', password='testpswd')
-    #     response_content = self.client.get('/edit_hello/').content
-    #     person = PersonInfo.objects.first()
-    #
-    #     self.assertRegexpMatches(
-    #         response_content,
-    #         r'<input[^>.]* value="%s".*>' % person.first_name,
-    #         "An input field for a person's first name should be in the "
-    #         "template"
-    #     )
-    #     self.assertRegexpMatches(
-    #         response_content,
-    #         r'<textarea[^>.]*>Bio<\/textarea>' % person.bio,
-    #         "A textarea for person's bio should be in the template"
-    #     )
+    def test_hello_edit_view_template_output(self):
+        """
+        Ensures that output of a `HelloEditView` teplate is valid
+        """
+        request = RequestFactory().get('/')
+        request.user = self.user
+        response_content = HelloEditView.as_view()(request)._container[0]
+        person = PersonInfo.objects.first()
+
+        self.assertRegexpMatches(
+            response_content,
+            r'<input[^>.]* value="%s".*>' % person.first_name,
+            "An input field for a person's first name should be in the "
+            "template"
+        )
+
+        self.assertRegexpMatches(
+            response_content,
+            '<textarea[^>]*>%s<\\/textarea>' % (re.escape(person.bio)),
+            "A textarea for person's bio should be in the template"
+        )
