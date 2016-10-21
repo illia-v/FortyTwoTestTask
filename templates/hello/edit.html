@@ -16,16 +16,16 @@
       <div class="col-sm-6">
         <div class="form-group">
           <label>Name</label>
-          <input class="form-control" type="text" value="Illia" required>
+          {{ form.first_name }}
         </div>
         <div class="form-group">
           <label>Last name</label>
-          <input class="form-control" type="text" value="Volochii" required>
+          {{ form.second_name }}
        </div>
         <div class="form-group">
           <label>Date of birth</label>
           <div class="input-group date" id="datepicker">
-            <input type="text" value="1999-10-10" class="form-control" required>
+            {{ form.birth_date }}
             <span class="input-group-addon">
               <span class="glyphicon glyphicon-calendar"></span>
             </span>
@@ -33,13 +33,13 @@
         </div>
         <div class="form-group">
           <label>Photo</label>
-          <input class="form-control" type="file" class="form-control">
+          {{ form.photo }}
 
           <br>
           <label>Preview of your photo</label>
           <br>
-          <img src="https://avatars0.githubusercontent.com/u/17710133"
-           id="photo-preview" alt="My photo" width="200px" />
+          <img src="{{ MEDIA_URL }}{{ photo_url }}" id="photo-preview"
+           alt="My photo" width="200px" />
         </div>
       </div>
 
@@ -47,23 +47,23 @@
         <h4>Contacts</h4>
         <div class="form-group">
           <label>Email</label>
-          <input class="form-control" type="email" value="illia.volochii@gmail.com" required>
+          {{ form.email }}
         </div>
         <div class="form-group">
           <label>Jabber</label>
-          <input class="form-control" type="email" value="illia-v@42cc.co" required>
+          {{ form.jabber }}
         </div>
         <div class="form-group">
           <label>Skype</label>
-          <input class="form-control" type="text" value="-" required>
+          {{ form.skype }}
         </div>
         <div class="form-group">
           <label>Other contacts</label><br>
-          <textarea class="form-control" rows="5" cols="40" required>Phone number: +38(050)152-16-80</textarea>
+          {{ form.other_contacts }}
         </div>
         <div class="form-group">
-          <label for="other_contacts">Bio</label><br>
-          <textarea class="form-control" rows="5" cols="40" required>I was born in Ivano-Frankivsk and I live here.<br>I have finished a school and I am a student now.</textarea>
+          <label>Bio</label><br>
+          {{ form.bio }}
         </div>
       </div>
     </div>
