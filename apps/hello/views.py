@@ -22,10 +22,11 @@ class HelloView(TemplateView):
 
 class HelloEditView(View):
     def get(self, request, *args, **kwargs):
-        form = HelloEditForm(initial=model_to_dict(
-            PersonInfo.objects.first()
-        ))
-        return render(request, 'hello/edit.html', {'form': form})
+        person = PersonInfo.objects.first()
+        form = HelloEditForm(initial=model_to_dict(person))
+        photo_url = person.path_to_photo_from_media_root()
+        return render(request, 'hello/edit.html', {'form': form,
+                                                   'photo_url': photo_url})
 
     def post(self, request, *args, **kwargs):
         if request.is_ajax():
