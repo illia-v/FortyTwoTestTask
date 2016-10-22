@@ -1,7 +1,10 @@
+from django.conf import settings
 from django.conf.urls import patterns, include, url
+from django.conf.urls.static import static
 
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.decorators import login_required
 
 from hello import views as hello_views
 from requests_history import views as requests_hisory_views
@@ -17,10 +20,13 @@ urlpatterns = patterns(
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
     url(r'^$', hello_views.HelloView.as_view(), name='hello'),
+    url(r'^edit_hello/$',
+        login_required(hello_views.HelloEditView.as_view()),
+        name='edit_hello'),
     url(r'^requests_history/$',
         requests_hisory_views.RequestsHistoryView.as_view(),
         name='requests_history'),
     url(r'^pull_new_requests/$',
         requests_hisory_views.RequestsPullingView.as_view(),
         name='pull_new_requests')
-)
+) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
