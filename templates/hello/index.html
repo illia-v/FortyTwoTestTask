@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+{% load edit_link %}
 
 {% block content %}
   <div class="text-right">
     <a href="{% url "edit_hello" %}" class="btn btn-xs btn-info">Edit</a>
-    <a href="/admin/hello/personinfo/1/" class="btn btn-xs btn-info">
+    <a href="{% edit_link my_info %}" class="btn btn-xs btn-info">
       Edit as admin
     </a>
   </div>

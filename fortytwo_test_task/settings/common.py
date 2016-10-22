@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'south',
+    'apps.general',
     'apps.hello',
     'apps.requests_history',
 )
