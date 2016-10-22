@@ -12,14 +12,14 @@ class TestPrintAllModels(TestCase):
     @classmethod
     def setUpClass(cls):
         # Transfer of stdout and stderr to variables
-    	cls.stdout = sys.stdout = StringIO()
-    	cls.stderr = sys.stderr = StringIO()
+        cls.stdout = sys.stdout = StringIO()
+        cls.stderr = sys.stderr = StringIO()
 
         call_command('print_all_models')
 
         # Assigning stdout and stderr their original values
-    	sys.stdout = sys.__stdout__
-    	sys.stderr = sys.__stderr__
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
 
     def test_print_all_models_writes_to_stdout(self):
         """
