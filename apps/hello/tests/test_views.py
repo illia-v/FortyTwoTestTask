@@ -1,4 +1,5 @@
 import re
+import cgi
 
 from django.contrib.auth.models import User
 from django.test import RequestFactory, TestCase
@@ -98,6 +99,8 @@ class TestHelloEditView(TestCase):
 
         self.assertRegexpMatches(
             response_content,
-            '<textarea[^>]*>%s<\\/textarea>' % (re.escape(person.bio)),
+            '<textarea[^>]*>\r\n%s<\\/textarea>' % (
+                re.escape(cgi.escape(person.bio))
+            ),
             "A textarea for person's bio should be in the template"
         )
