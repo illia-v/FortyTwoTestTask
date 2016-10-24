@@ -17,7 +17,7 @@ function pullNewRequests() {
             $( "<a>" ).attr( "href", newRequest.url ).text( newRequest.url )
           ))
           .append($( "<td>" ).text( newRequest.method ))
-          .append($( "<td>" ).text( 1 ));
+          .append($( "<td>" ).text( newRequest.priority ));
 
         requestsDataTable.row.add($newRow)
         .row(

@@ -33,7 +33,8 @@ class RequestsPullingView(View):
                 'url': new_request.url,
                 'method': new_request.method,
                 'timestamp': date_format(new_request.timestamp,
-                                         'DATETIME_FORMAT')
+                                         'DATETIME_FORMAT'),
+                'priority': new_request.priority
             })
 
         return HttpResponse(json.dumps(new_requests),

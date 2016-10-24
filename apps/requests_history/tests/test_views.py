@@ -87,3 +87,5 @@ class TestRequestsPullingView(TestCase):
                              'Should contain requests `method`s')
         self.assertIsNotNone(request.get('timestamp', None),
                              'Should contain requests `timestamps`s')
+        self.assertIsNotNone(request.get('priority', None),
+                             'Should contain requests `priority`')
