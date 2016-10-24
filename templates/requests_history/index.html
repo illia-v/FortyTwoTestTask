@@ -4,6 +4,11 @@
 
 {% block title %}Requests History{% endblock %}
 
+{% block stylesheets %}
+  <link href="//cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.css"
+   rel="stylesheet">
+{% endblock %}
+
 {% block content %}
   <div class="table-responsive">
     <table id="requests-table" class="table table-striped">
@@ -13,6 +18,7 @@
           <th>Timestamp</th>
           <th>URL</th>
           <th>Method</th>
+          <th>Priority</th>
         </tr>
       </thead>
 
@@ -25,6 +31,7 @@
               <a href="{{ request_data.url }}">{{ request_data.url }}</a>
             </td>
             <td>{{ request_data.method }}</td>
+            <td>1</td>
           </tr>
         {% endfor %}
       </tbody>
@@ -35,6 +42,10 @@
 {% block scripts %}
   <script>
     var requestsPullingPageURL = "{% url "pull_new_requests" %}";
+  </script>
+  <script src="//cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.js">
+  </script>
+  <script src="{% static "requests_history/js/process_table.js" %}">
   </script>
   <script src="{% static "requests_history/js/pull_new_requests.js" %}">
   </script>
