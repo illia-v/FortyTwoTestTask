@@ -10,29 +10,29 @@ function pullNewRequests() {
         var newRequest = newRequests[i];
         var $requestTable = $( "#requests-table" );
 
-        $( "tbody", $requestTable ).prepend(
-          $( "<tr>" ).data( "request-id", newRequest.id )
+        var $newRow = $( "<tr>" ).data( "request-id", newRequest.id )
           .append($( "<td>" ).text( newRequest.id ))
           .append($( "<td>" ).text( newRequest.timestamp ))
           .append($( "<td>" ).html(
             $( "<a>" ).attr( "href", newRequest.url ).text( newRequest.url )
           ))
           .append($( "<td>" ).text( newRequest.method ))
-        );
+          .append($( "<td>" ).text( 1 ));
 
-        $( "tr", $requestTable ).last().remove();
-      }
+        requestsDataTable.row.add($newRow)
+        .row(
+          $( "tr[data-request-id=" + String(lastRequestId-9) + "]" )
+        ).remove().draw();
 
-      // Adding an amount of new requests, added to a page when a user was
-      // out, to a title of a document
-      if (newRequests.length > 0) {
-        lastRequestId = Number(newRequests.pop().id);
-      }
-      var notSeenRequestsNumber = lastRequestId-localStorage.lastSeenRequestId;
-      document.title = (notSeenRequestsNumber > 0 ?
-                        "(" + notSeenRequestsNumber + ") " : "") +
-                        "Requsts History";
-      clearDocumentTitleOnAction();
+        lastRequestId = newRequest.id;
+    }
+    // Adding an amount of new requests, added to a page when a user was
+    // out, to a title of a document
+    var notSeenRequestsNumber = lastRequestId-localStorage.lastSeenRequestId;
+    document.title = (notSeenRequestsNumber > 0 ?
+                      "(" + notSeenRequestsNumber + ") " : "") +
+                      "Requsts History";
+    clearDocumentTitleOnAction();
   });
 
   setTimeout( pullNewRequests, 1000 );
