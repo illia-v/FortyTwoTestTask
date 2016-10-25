@@ -18,7 +18,7 @@ def create_db_entity_about_action_on_instance(sender, **kwargs):
     ActionOnInstance.objects.create(
         app_name=sender._meta.app_label,
         model_name=sender.__name__,
-        model_id=kwargs['instance'].id,
+        model_id=getattr(kwargs['instance'], 'id', None),
         instance=str(kwargs['instance'].__dict__),
         action=action
     )
