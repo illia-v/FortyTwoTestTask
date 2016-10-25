@@ -1,3 +1,4 @@
+from datetime import timedelta
 import os.path
 from StringIO import StringIO
 
@@ -6,6 +7,7 @@ from PIL import Image
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
 
+from .validators import validate_birth_date
 from fortytwo_test_task.settings.common import MEDIA_ROOT
 
 
@@ -15,7 +17,7 @@ class PersonInfo(models.Model):
     """
     first_name = models.CharField(max_length=50)
     second_name = models.CharField(max_length=50)
-    birth_date = models.DateField()
+    birth_date = models.DateField(validators=[validate_birth_date])
     bio = models.TextField()
     photo = models.ImageField(upload_to=MEDIA_ROOT+'/photos', null=True)
     email = models.EmailField()
