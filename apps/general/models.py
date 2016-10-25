@@ -24,10 +24,9 @@ class ActionOnInstance(models.Model):
                 self.model_name,
                 self.model_id
             )
-        else:
-            return '%s %s `%s.%s`' % (
-                self.timestamp.isoformat(),
-                self.get_action_display(),
-                self.app_name,
-                self.model_name
-            )
+        return '%s %s `%s.%s`' % (
+            self.timestamp.isoformat(),
+            self.get_action_display(),
+            self.app_name,
+            self.model_name
+        )
