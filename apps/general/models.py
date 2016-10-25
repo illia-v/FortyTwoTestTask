@@ -10,7 +10,7 @@ class ActionOnInstance(models.Model):
 
     app_name = models.CharField(max_length=50)
     model_name = models.CharField(max_length=50)
-    model_id = models.PositiveIntegerField()
+    model_id = models.PositiveIntegerField(null=True)
     instance = models.TextField()
     action = models.PositiveSmallIntegerField(choices=ACTION_CHOICES)
     timestamp = models.DateTimeField(auto_now_add=True)
