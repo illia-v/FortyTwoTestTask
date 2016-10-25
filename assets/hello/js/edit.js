@@ -2,6 +2,7 @@
 $(function () {
   $( "#datepicker" ).datepicker({
     format: "yyyy-mm-dd",
+    startDate: "-120y",
     endDate: "+0d",
     autoclose: true
   });

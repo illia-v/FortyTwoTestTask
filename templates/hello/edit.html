@@ -35,11 +35,17 @@
           <label>Photo</label>
           {{ form.photo }}
 
-          <br>
-          <label>Preview of your photo</label>
-          <br>
-          <img src="{{ MEDIA_URL }}{{ photo_url }}" id="photo-preview"
-           alt="My photo" width="200px" />
+          {% if photo_url != "photos/" %}
+          <div>
+          {% else %}
+          <div style="display: none;">
+          {% endif %}
+            <br>
+            <label>Preview of your photo</label>
+            <br>
+            <img src="{{ MEDIA_URL }}{{ photo_url }}" id="photo-preview"
+             alt="My photo" width="200px" />
+           </div>
         </div>
       </div>
 
