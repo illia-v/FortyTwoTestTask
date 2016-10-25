@@ -32,19 +32,21 @@ class HelloEditView(View):
         if request.is_ajax():
             request_data = json.loads(request.body)
 
-            # Photo is base64 encoded on front end because it is
-            # transfered as JSON string via AJAX
-            photo = InMemoryUploadedFile(
-                StringIO(request_data['encoded_photo'].decode('base64')),
-                field_name='photo',
-                name='illia.jpg',
-                content_type='image/jpg',
-                size=len(request_data['encoded_photo']),
-                charset='utf-8',
-            )
+            encoded_photo = request_data.get('encoded_photo', None)
+            if encoded_photo:
+                # Photo is base64 encoded on front end because it is
+                # transfered as JSON string via AJAX
+                photo = InMemoryUploadedFile(
+                    StringIO(request_data['encoded_photo'].decode('base64')),
+                    field_name='photo',
+                    name='illia.jpg',
+                    content_type='image/jpg',
+                    size=len(request_data['encoded_photo']),
+                    charset='utf-8',
+                )
 
             form = HelloEditForm(http.QueryDict(request_data['form_data']),
-                                 {'photo': photo},
+                                 {'photo': photo} if encoded_photo else None,
                                  instance=PersonInfo.objects.first())
 
             if form.is_valid():
