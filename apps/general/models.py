@@ -16,10 +16,18 @@ class ActionOnInstance(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
-        return '%s %s `%s.%s.%d`' % (
-            self.timestamp.isoformat(),
-            self.get_action_display(),
-            self.app_name,
-            self.model_name,
-            self.model_id
-        )
+        if self.model_id:
+            return '%s %s `%s.%s.%d`' % (
+                self.timestamp.isoformat(),
+                self.get_action_display(),
+                self.app_name,
+                self.model_name,
+                self.model_id
+            )
+        else:
+            return '%s %s `%s.%s`' % (
+                self.timestamp.isoformat(),
+                self.get_action_display(),
+                self.app_name,
+                self.model_name
+            )
