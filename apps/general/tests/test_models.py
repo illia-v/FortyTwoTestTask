@@ -41,3 +41,15 @@ class TestActionOnInstance(TestCase):
         self.assertEqual(self.action.__unicode__(), str_representation,
                          'Method `__unicode__` of the `ActionOnInstance` '
                          'model should return a valid string')
+
+        self.action.model_id = None
+        self.action.save()
+        str_representation = '%s %s `%s.%s`' % (
+            self.action.timestamp.isoformat(),
+            self.action.get_action_display(),
+            self.action.app_name,
+            self.action.model_name
+        )
+        self.assertEqual(self.action.__unicode__(), str_representation,
+                         'Method `__unicode__` of the `ActionOnInstance` '
+                         'model should return a valid string')
