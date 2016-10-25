@@ -5,6 +5,10 @@ from .widgets import FormControlTextInput
 
 
 class HelloEditForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(HelloEditForm, self).__init__(*args, **kwargs)
+        self.fields['photo'].required = False
+
     class Meta:
         model = PersonInfo
         fields = '__all__'
@@ -16,8 +20,7 @@ class HelloEditForm(forms.ModelForm):
                                    'required': 'true',
                                    'rows': 5}),
             'photo': forms.FileInput({'id': 'photo-input',
-                                      'accept': 'image/*',
-                                      'required': 'true'}),
+                                      'accept': 'image/*'}),
             'email': forms.EmailInput({'class': 'form-control',
                                        'required': 'true'}),
             'jabber': forms.EmailInput({'class': 'form-control',
