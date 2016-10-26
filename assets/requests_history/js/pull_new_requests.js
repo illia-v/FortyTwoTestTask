@@ -20,9 +20,10 @@ function pullNewRequests() {
 
         var tableOrder = requestsDataTable.order();
 
-        requestsDataTable.order([0, "desc"]).draw()
-        .row($("#requests-table tr").last()).remove().row.add($newRow)
-        .order(tableOrder).draw();
+        requestsDataTable.order([0, "desc"]).draw();
+        if (lastRequestId > 9)
+          requestsDataTable.row($("#requests-table tr").last()).remove();
+        requestsDataTable.row.add($newRow).order(tableOrder).draw();
 
         lastRequestId = newRequest.id;
     }
