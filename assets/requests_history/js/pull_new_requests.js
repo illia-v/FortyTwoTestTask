@@ -20,7 +20,8 @@ function pullNewRequests() {
           .append($( "<td>" ).text( newRequest.method ))
         );
 
-        $( "tr", $requestTable ).last().remove();
+        if (lastRequestId > 9)
+          $( "tr", $requestTable ).last().remove();
       }
 
       // Adding an amount of new requests, added to a page when a user was
@@ -31,7 +32,7 @@ function pullNewRequests() {
       var notSeenRequestsNumber = lastRequestId-localStorage.lastSeenRequestId;
       document.title = (notSeenRequestsNumber > 0 ?
                         "(" + notSeenRequestsNumber + ") " : "") +
-                        "Requsts History";
+                        "Requests History";
       clearDocumentTitleOnAction();
   });
 
@@ -45,7 +46,7 @@ function clearDocumentTitleOnAction() {
   // Changes a title of a document to 'Requsts History' when a user's mouse is
   // over the document
   $( document ).one("mouseover", function(event) {
-    document.title = "Requsts History";
+    document.title = "Requests History";
     localStorage.lastSeenRequestId = lastRequestId;
   });
 }
