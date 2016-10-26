@@ -18,7 +18,7 @@ class HelloEditForm(forms.ModelForm):
             'birth_date': FormControlTextInput({'maxlength': 50}),
             'bio': forms.Textarea({'class': 'form-control',
                                    'required': 'true',
-                                   'rows': 5}),
+                                   'rows': 2}),
             'photo': forms.FileInput({'id': 'photo-input',
                                       'accept': 'image/*'}),
             'email': forms.EmailInput({'class': 'form-control',
@@ -28,5 +28,5 @@ class HelloEditForm(forms.ModelForm):
             'skype': FormControlTextInput({'maxlength': 20}),
             'other_contacts': forms.Textarea({'class': 'form-control',
                                               'required': 'true',
-                                              'rows': 5})
+                                              'rows': 2})
         }
