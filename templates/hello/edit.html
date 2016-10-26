@@ -7,7 +7,7 @@
 {% block stylesheets %}
   <link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.min.css"
    rel="stylesheet">
-  <link src="{% static "hello/css/edit.css" %}" rel="stylesheet"></link>
+  <link href="{% static "hello/css/edit.css" %}" rel="stylesheet"></link>
 {% endblock %}
 
 {% block content %}
@@ -50,7 +50,6 @@
       </div>
 
       <div class="col-sm-6">
-        <h4>Contacts</h4>
         <div class="form-group">
           <label>Email</label>
           {{ form.email }}
@@ -75,11 +74,11 @@
     </div>
 
     <div id="form-btns">
-      <button id="form-submit-btn" type="submit" class="btn btn-xs btn-info"
+      <button id="form-submit-btn" type="submit" class="btn btn-info"
        data-loading-text="<span class='glyphicon glyphicon-refresh glyphicon-refresh-animate'></span> Editing">
         Save
       </button>
-      <a href="{% url "hello" %}" class="btn btn-xs btn-danger">Cancel</a>
+      <a href="{% url "hello" %}" class="btn btn-danger">Cancel</a>
     </div>
   </form>
 {% endblock %}

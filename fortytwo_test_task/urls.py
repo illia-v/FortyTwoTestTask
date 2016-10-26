@@ -18,7 +18,8 @@ urlpatterns = patterns(
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login/$', auth_views.login, name='login'),
-    url(r'^logout/$', auth_views.logout, name='logout'),
+    url(r'^logout/$', auth_views.logout,
+        {'template_name': 'registration/logout.html'}, name='logout'),
     url(r'^$', hello_views.HelloView.as_view(), name='hello'),
     url(r'^edit_hello/$',
         login_required(hello_views.HelloEditView.as_view()),

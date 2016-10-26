@@ -8,5 +8,9 @@ textarea {
 }
 
 #form-btns {
-  margin: 1vh 0;
+  margin: 1vh 0 2vh;
+}
+
+#form-submit-btn {
+  margin-right: 0.8vw;
 }
