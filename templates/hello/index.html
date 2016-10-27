@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
+
+{% block title %}42 Coffee Cups Test Assignment{% endblock %}
+
 {% block content %}
   <div class="row">
     <div class="col-sm-6">
@@ -13,7 +16,11 @@
         <p><i>Date of birth:</i> <b>{{ my_info.birth_date }}</b></p>
       </div>
       <div>
-        <p><i>Bio:</i><br>{{ my_info.bio|safe }}</p>
+        <p>
+          <i>Bio:</i>
+          <br>
+          <textarea style="width: 100%;" readonly>{{ my_info.bio|safe }}</textarea>
+        </p>
       </div>
     </div>
 
@@ -34,7 +41,11 @@
         <p><i>Skype:</i> {{ my_info.skype }}</p>
       </div>
       <div>
-        <p><i>Other contacts:</i><br>{{ my_info.other_contacts|safe }}</p>
+        <p>
+          <i>Other contacts:</i>
+          <br>
+          <textarea style="width: 100%;" readonly>{{ my_info.other_contacts|safe }}</textarea>
+        </p>
       </div>
     </div>
   </div>
