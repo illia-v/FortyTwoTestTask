@@ -49,6 +49,9 @@
                    class="form-control" required="true">
                 </div>
                 <button type="submit" class="btn btn-info">Log in</button>
+                <button class="btn btn-default" data-dismiss="modal">
+                  Close
+                </button>
               </form>
             </div>
           </div>
@@ -61,13 +64,10 @@
     </main>
 
     <footer>
-      <nav class="navbar navbar-default">
-        <div class="container">
-          <ul class="nav navbar-nav">
-            <li><a href="{% url "requests_history" %}"><b>Requests</b></a></li>
-          </ul>
-        </div>
-      </nav>
+      <hr>
+      <a id="requests-ref" href="{% url "requests_history" %}" class="btn btn-default">
+        Requests
+      </a>
     </footer>
   </div>
 

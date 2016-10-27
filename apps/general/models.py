@@ -10,16 +10,23 @@ class ActionOnInstance(models.Model):
 
     app_name = models.CharField(max_length=50)
     model_name = models.CharField(max_length=50)
-    model_id = models.PositiveIntegerField()
+    model_id = models.PositiveIntegerField(null=True)
     instance = models.TextField()
     action = models.PositiveSmallIntegerField(choices=ACTION_CHOICES)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
-        return '%s %s `%s.%s.%d`' % (
+        if self.model_id:
+            return '%s %s `%s.%s.%d`' % (
+                self.timestamp.isoformat(),
+                self.get_action_display(),
+                self.app_name,
+                self.model_name,
+                self.model_id
+            )
+        return '%s %s `%s.%s`' % (
             self.timestamp.isoformat(),
             self.get_action_display(),
             self.app_name,
-            self.model_name,
-            self.model_id
+            self.model_name
         )

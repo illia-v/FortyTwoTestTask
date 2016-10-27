@@ -5,7 +5,7 @@
     "first_name": "Illia",
     "second_name": "Volochii",
     "birth_date": "1999-10-10",
-    "bio": "I was born in Ivano-Frankivsk and I live here.<br>I have finished a school and I am a student now.",
+    "bio": "I was born in Ivano-Frankivsk and I live here.\nI have finished a school and I am a student now.",
     "email": "illia.volochii@gmail.com",
     "jabber": "illia-v@42cc.co",
     "skype": "-",
@@ -17,7 +17,7 @@
   "pk": 1,
   "fields": {
     "username": "admin",
-    "password": "pbkdf2_sha256$12000$zSUkXApOkEX9$rXhVs91ZkA/LlEV8FazWOMiQufaDmF/MxXFqEG3mcuM=",
+    "password": "pbkdf2_sha256$12000$4bLdYZNJowFc$HIK1aND1HorpG2RriS7plqblpAfQdc+3dE6Lm1WttHk=",
     "is_superuser": true,
     "is_staff": true,
     "is_active": true

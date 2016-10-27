@@ -8,7 +8,6 @@ function pullNewRequests() {
     function(newRequests) {
       for (var i=0; i<newRequests.length; i++) {
         var newRequest = newRequests[i];
-        var $requestTable = $( "#requests-table" );
 
         var $newRow = $( "<tr>" ).data( "request-id", newRequest.id )
           .append($( "<td>" ).text( newRequest.id ))
@@ -19,10 +18,12 @@ function pullNewRequests() {
           .append($( "<td>" ).text( newRequest.method ))
           .append($( "<td>" ).text( newRequest.priority ));
 
-        requestsDataTable.row.add($newRow)
-        .row(
-          $( "tr[data-request-id=" + String(lastRequestId-9) + "]" )
-        ).remove().draw();
+        var tableOrder = requestsDataTable.order();
+
+        requestsDataTable.order([0, "desc"]).draw();
+        if (lastRequestId > 9)
+          requestsDataTable.row($("#requests-table tr").last()).remove();
+        requestsDataTable.row.add($newRow).order(tableOrder).draw();
 
         lastRequestId = newRequest.id;
     }
@@ -31,7 +32,7 @@ function pullNewRequests() {
     var notSeenRequestsNumber = lastRequestId-localStorage.lastSeenRequestId;
     document.title = (notSeenRequestsNumber > 0 ?
                       "(" + notSeenRequestsNumber + ") " : "") +
-                      "Requsts History";
+                      "Requests History";
     clearDocumentTitleOnAction();
   });
 
@@ -45,7 +46,7 @@ function clearDocumentTitleOnAction() {
   // Changes a title of a document to 'Requsts History' when a user's mouse is
   // over the document
   $( document ).one("mouseover", function(event) {
-    document.title = "Requsts History";
+    document.title = "Requests History";
     localStorage.lastSeenRequestId = lastRequestId;
   });
 }
