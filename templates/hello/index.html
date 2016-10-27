@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% load edit_link %}
 
+
+{% block title %}42 Coffee Cups Test Assignment{% endblock %}
+
 {% block content %}
   <div class="text-right">
     <a href="{% url "edit_hello" %}" class="btn btn-xs btn-info">Edit</a>
@@ -43,10 +46,18 @@
         <p><i>Skype:</i> {{ my_info.skype }}</p>
       </div>
       <div>
-        <p><i>Other contacts:</i><br>{{ my_info.other_contacts|safe }}</p>
+        <p>
+          <i>Other contacts:</i>
+          <br>
+          <textarea style="width: 100%;" readonly>{{ my_info.other_contacts|safe }}</textarea>
+        </p>
       </div>
       <div>
-        <p><i>Bio:</i><br>{{ my_info.bio|safe }}</p>
+        <p>
+          <i>Bio:</i>
+          <br>
+          <textarea style="width: 100%;" readonly>{{ my_info.bio|safe }}</textarea>
+        </p>
       </div>
     </div>
   </div>
