@@ -1,6 +1,13 @@
-localStorage.lastSeenRequestId = Number($( "#requests-table tr" ).eq(1)
-                                         .data( "request-id" ));
-var lastRequestId = localStorage.lastSeenRequestId;
+if (!localStorage.lastSeenRequestId) {
+  localStorage.lastSeenRequestId = 0;
+  clearDocumentTitleOnAction();
+}
+
+var lastRequestId = Number($( "#requests-table tr" ).eq(1)
+                           .data( "request-id" ));
+
+addNotSeenRequestsNumberToDocumentTitle();
+
 
 function pullNewRequests() {
   // Pulls new requests to a page
@@ -27,12 +34,8 @@ function pullNewRequests() {
 
         lastRequestId = newRequest.id;
     }
-    // Adding an amount of new requests, added to a page when a user was
-    // out, to a title of a document
-    var notSeenRequestsNumber = lastRequestId-localStorage.lastSeenRequestId;
-    document.title = (notSeenRequestsNumber > 0 ?
-                      "(" + notSeenRequestsNumber + ") " : "") +
-                      "Requests History";
+
+    addNotSeenRequestsNumberToDocumentTitle();
     clearDocumentTitleOnAction();
   });
 
@@ -42,8 +45,18 @@ function pullNewRequests() {
 pullNewRequests();
 
 
+function addNotSeenRequestsNumberToDocumentTitle() {
+  // Adds an amount of new requests, added to a page when a user was out, to
+  // a title of a document
+  var notSeenRequestsNumber = lastRequestId - localStorage.lastSeenRequestId;
+  document.title = (notSeenRequestsNumber > 0 ?
+                    "(" + notSeenRequestsNumber + ") " : "") +
+                    "Requests History";
+}
+
+
 function clearDocumentTitleOnAction() {
-  // Changes a title of a document to 'Requsts History' when a user's mouse is
+  // Changes a title of a document to 'Requests History' when a user's mouse is
   // over the document
   $( document ).one("mouseover", function(event) {
     document.title = "Requests History";
