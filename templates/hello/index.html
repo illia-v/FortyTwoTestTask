@@ -49,14 +49,14 @@
         <p>
           <i>Other contacts:</i>
           <br>
-          <textarea style="width: 100%;" readonly>{{ my_info.other_contacts|safe }}</textarea>
+          {{ my_info.other_contacts|linebreaksbr }}
         </p>
       </div>
       <div>
         <p>
           <i>Bio:</i>
           <br>
-          <textarea style="width: 100%;" readonly>{{ my_info.bio|safe }}</textarea>
+          {{ my_info.bio|linebreaksbr }}
         </p>
       </div>
     </div>
