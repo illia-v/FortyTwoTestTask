@@ -3,7 +3,6 @@ from StringIO import StringIO
 
 from django import http
 from django.core.files.uploadedfile import InMemoryUploadedFile
-from django.forms.models import model_to_dict
 from django.shortcuts import render
 from django.views.generic import TemplateView, View
 
@@ -23,7 +22,7 @@ class HelloView(TemplateView):
 class HelloEditView(View):
     def get(self, request, *args, **kwargs):
         person = PersonInfo.objects.first()
-        form = HelloEditForm(initial=model_to_dict(person))
+        form = HelloEditForm(instance=person)
         photo_url = person.path_to_photo_from_media_root()
         return render(request, 'hello/edit.html', {'form': form,
                                                    'photo_url': photo_url})
