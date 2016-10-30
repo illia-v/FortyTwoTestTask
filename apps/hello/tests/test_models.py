@@ -37,17 +37,7 @@ class TestPersonInfo(TestCase):
         """
         Ensures `PersonInfo` photo is scaled to 200x200
         """
-        self.person_info = model_instances.person_info()
-        self.person_info.photo = InMemoryUploadedFile(
-            StringIO(TEST_IMAGE),
-            field_name='photo',
-            name='mt_photo.jpg',
-            content_type='image/jpg',
-            size=len(TEST_IMAGE),
-            charset='utf-8',
-        )
-        self.person_info.save()
-
+        model_instances.add_photo_to_person_info_instance(self.person_info)
         photo = self.person_info.photo
 
         self.assertLessEqual(photo.width and photo.height, 200,
