@@ -23,9 +23,7 @@ class HelloEditView(View):
     def get(self, request, *args, **kwargs):
         person = PersonInfo.objects.first()
         form = HelloEditForm(instance=person)
-        photo_url = person.path_to_photo_from_media_root()
-        return render(request, 'hello/edit.html', {'form': form,
-                                                   'photo_url': photo_url})
+        return render(request, 'hello/edit.html', {'form': form})
 
     def post(self, request, *args, **kwargs):
         if request.is_ajax():
