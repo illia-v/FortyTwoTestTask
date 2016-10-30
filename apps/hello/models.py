@@ -39,3 +39,9 @@ class PersonInfo(models.Model):
                 'image/jpeg', photo_output.len, None)
 
         super(PersonInfo, self).save(*args, **kwargs)
+
+    @property
+    def photo_url(self):
+        if self.photo and hasattr(self.photo, 'url'):
+            return self.photo.url
+        return
