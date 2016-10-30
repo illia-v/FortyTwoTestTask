@@ -1,4 +1,3 @@
-import os.path
 from StringIO import StringIO
 
 from PIL import Image
@@ -7,7 +6,6 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
 
 from .validators import validate_birth_date
-from fortytwo_test_task.settings.common import MEDIA_ROOT
 
 
 class PersonInfo(models.Model):
