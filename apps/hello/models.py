@@ -41,9 +41,3 @@ class PersonInfo(models.Model):
                 'image/jpeg', photo_output.len, None)
 
         super(PersonInfo, self).save(*args, **kwargs)
-
-    def path_to_photo_from_media_root(self):
-        """
-        Returns a path to a person's photo from `MEDIA_ROOT`
-        """
-        return 'photos/%s' % os.path.basename(self.photo.name)
