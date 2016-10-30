@@ -35,7 +35,7 @@
           <label>Photo</label>
           {{ form.photo }}
 
-          {% if photo_url != "photos/" %}
+          {% if my_info.photo_url %}
           <div>
           {% else %}
           <div style="display: none;">
@@ -43,7 +43,7 @@
             <br>
             <label>Preview of your photo</label>
             <br>
-            <img src="{{ my_info.photo.url }}" id="photo-preview"
+            <img src="{{ my_info.photo_url }}" id="photo-preview"
              alt="My photo" width="200px" />
            </div>
         </div>
