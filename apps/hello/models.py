@@ -18,7 +18,7 @@ class PersonInfo(models.Model):
     second_name = models.CharField(max_length=50)
     birth_date = models.DateField(validators=[validate_birth_date])
     bio = models.TextField()
-    photo = models.ImageField(upload_to=MEDIA_ROOT+'/photos', null=True)
+    photo = models.ImageField(upload_to='photos', null=True)
     email = models.EmailField()
     jabber = models.EmailField()
     skype = models.CharField(max_length=20)
