@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
-from StringIO import StringIO
-
-from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.test import TestCase
 
 from . import model_instances
-from .image import TEST_IMAGE
 
 
 class TestPersonInfo(TestCase):
@@ -37,19 +33,21 @@ class TestPersonInfo(TestCase):
         """
         Ensures `PersonInfo` photo is scaled to 200x200
         """
-        self.person_info = model_instances.person_info()
-        self.person_info.photo = InMemoryUploadedFile(
-            StringIO(TEST_IMAGE),
-            field_name='photo',
-            name='mt_photo.jpg',
-            content_type='image/jpg',
-            size=len(TEST_IMAGE),
-            charset='utf-8',
-        )
-        self.person_info.save()
-
+        model_instances.add_photo_to_person_info_instance(self.person_info)
         photo = self.person_info.photo
 
         self.assertLessEqual(photo.width and photo.height, 200,
                              'Photo should be scaled to 200x200, maintaining '
                              'aspect ratio, before saving')
+
+    def test_person_info_photo_url(self):
+        """
+        Ensures `PersonInfo.photo_url` returns a valid URL
+        """
+        self.assertEqual(self.person_info.photo_url, None,
+                         "Photo URL should be None if a photo does not exist")
+
+        model_instances.add_photo_to_person_info_instance(self.person_info)
+        self.assertEqual(self.person_info.photo_url,
+                         self.person_info.photo.url,
+                         "Should return a valid URL")

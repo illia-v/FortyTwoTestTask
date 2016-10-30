@@ -1,4 +1,3 @@
-import os.path
 from StringIO import StringIO
 
 from PIL import Image
@@ -7,7 +6,6 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
 
 from .validators import validate_birth_date
-from fortytwo_test_task.settings.common import MEDIA_ROOT
 
 
 class PersonInfo(models.Model):
@@ -18,7 +16,7 @@ class PersonInfo(models.Model):
     second_name = models.CharField(max_length=50)
     birth_date = models.DateField(validators=[validate_birth_date])
     bio = models.TextField()
-    photo = models.ImageField(upload_to=MEDIA_ROOT+'/photos', null=True)
+    photo = models.ImageField(upload_to='photos', null=True)
     email = models.EmailField()
     jabber = models.EmailField()
     skype = models.CharField(max_length=20)
@@ -42,8 +40,8 @@ class PersonInfo(models.Model):
 
         super(PersonInfo, self).save(*args, **kwargs)
 
-    def path_to_photo_from_media_root(self):
-        """
-        Returns a path to a person's photo from `MEDIA_ROOT`
-        """
-        return 'photos/%s' % os.path.basename(self.photo.name)
+    @property
+    def photo_url(self):
+        if self.photo and hasattr(self.photo, 'url'):
+            return self.photo.url
+        return

@@ -24,8 +24,7 @@
       </div>
       <div>
         <p><i>Photo:</i></p>
-        <img src="{{ MEDIA_URL }}{{ my_info.path_to_photo_from_media_root }}"
-         alt="My photo" width="200px">
+        <img src="{{ my_info.photo_url }}" alt="My photo" width="200px">
       </div>
     </div>
 
@@ -34,7 +33,7 @@
       <div>
         <p>
           <i>Email:</i>
-          <a href="mailto:illia.volochii@gmail.com">
+          <a href="mailto:{{ my_info.email }}">
             {{ my_info.email }}
           </a>
         </p>
