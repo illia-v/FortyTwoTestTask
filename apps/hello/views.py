@@ -8,6 +8,9 @@ from django.views.generic import TemplateView, View
 
 from .forms import HelloEditForm
 from .models import PersonInfo
+from general import signals
+
+__all__ = ['signals']
 
 
 class HelloView(TemplateView):
