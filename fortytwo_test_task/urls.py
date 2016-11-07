@@ -1,3 +1,5 @@
+from registration.backends.simple.views import RegistrationView
+
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
@@ -20,6 +22,9 @@ urlpatterns = patterns(
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout,
         {'template_name': 'registration/logout.html'}, name='logout'),
+    url(r'^register/$',
+        RegistrationView.as_view(get_success_url=lambda request, user: '/'),
+        name='register'),
     url(r'^$', hello_views.HelloView.as_view(), name='hello'),
     url(r'^edit_hello/$',
         login_required(hello_views.HelloEditView.as_view()),
