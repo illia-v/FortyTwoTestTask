@@ -1,4 +1,5 @@
 Django==1.6.7
 south==1.0.2
 Pillow==3.4.2
+django-registration-redux==1.1
 42cc-pystyle

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+  <form method="post">{% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger">
+        {% for error in form.non_field_errors %}
+          <b>{{ error }}</b>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label>{{ form.username.label }}</label>
+          <input maxlength="30" name="username" type="text" class="form-control" required
+           value="{%if form.username.value %}{{ form.username.value }}{% endif %}">
+          {% if form.username.errors %}
+            <div class="alert alert-danger">
+              {% for error in form.username.errors %}
+                <b>{{ error }}</b>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label>{{ form.email.label }}</label>
+          <input name="email" type="email" class="form-control" required
+           value="{%if form.username.value %}{{ form.email.value }}{% endif %}">
+          {% if form.email.errors %}
+            <div class="alert alert-danger">
+              {% for error in form.email.errors %}
+                <b>{{ error }}</b>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label>{{ form.password1.label }}</label>
+          <input name="password1" type="password" class="form-control" required>
+          {% if form.password1.errors %}
+            <div class="alert alert-danger">
+              {% for error in form.password1.errors %}
+                <b>{{ error }}</b>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label>{{ form.password2.label }}</label>
+          <input name="password2" type="password" class="form-control" required>
+          {% if form.password2.errors %}
+            <div class="alert alert-danger">
+              {% for error in form.password2.errors %}
+                <b>{{ error }}</b>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-info">Sign Up</button>
+  </form>
+{% endblock %}

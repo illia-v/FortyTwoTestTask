@@ -22,4 +22,22 @@
     "is_staff": true,
     "is_active": true
   }
+},
+{
+  "model": "auth.User",
+  "pk": 2,
+  "fields": {
+    "username": "marta",
+    "password": "pbkdf2_sha256$12000$4bLdYZNJowFc$HIK1aND1HorpG2RriS7plqblpAfQdc+3dE6Lm1WttHk=",
+    "is_active": true
+  }
+},
+{
+  "model": "auth.User",
+  "pk": 3,
+  "fields": {
+    "username": "mary",
+    "password": "pbkdf2_sha256$12000$4bLdYZNJowFc$HIK1aND1HorpG2RriS7plqblpAfQdc+3dE6Lm1WttHk=",
+    "is_active": true
+  }
 }]
