@@ -10,9 +10,9 @@ class TestMessagesURLs(TestCase):
         """
         messages = resolve('/messages/')
 
-        self.assertEqual(reverse('messages'), '/messages/',
-                         'A view name `messages` should be reversed to the '
-                         'URL `/messages/`')
+        self.assertEqual(reverse('messages:index'), '/messages/',
+                         'A view name `messages:index` should be reversed to '
+                         'the URL `/messages/`')
         self.assertEqual(messages.func.__name__, 'MessagesIndexView',
                          'Should be resolved to `MessagesIndexView`')
 
@@ -23,9 +23,9 @@ class TestMessagesURLs(TestCase):
         """
         messages_detail = resolve('/messages/somebody/')
 
-        self.assertEqual(reverse('messages_detail', args=('somebody')),
+        self.assertEqual(reverse('messages:detail', args=['somebody']),
                          '/messages/somebody/',
-                         'A view name `messages_detail` should be reversed to '
+                         'A view name `messages:detail` should be reversed to '
                          'the URL `/messages/{username}/`')
         self.assertEqual(messages_detail.func.__name__, 'MessagesDetailView',
                          'Should be resolved to `MessagesDetailView`')

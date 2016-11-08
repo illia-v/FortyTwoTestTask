@@ -1,7 +1,7 @@
+from django.contrib.auth.models import User
 from django.test import RequestFactory, TestCase
 
 from ..views import MessagesDetailView, MessagesIndexView
-from hello.tests.model_instances import person_info
 
 
 class TestMessagesIndexView(TestCase):
@@ -9,7 +9,7 @@ class TestMessagesIndexView(TestCase):
     A test case for a view `MessagesIndexView`
     """
     def setUp(self):
-        self.user = person_info()
+        self.user = User.objects.create(username='test', password='testpswd')
 
     def test_messages_index_view_basic(self):
         """
@@ -40,8 +40,9 @@ class TestMessagesDetailView(TestCase):
     A test case for a view `MessagesDetailView`
     """
     def setUp(self):
-        self.user = person_info()
-        self.interlocutor = person_info()
+        self.user = User.objects.create(username='test', password='testpswd')
+        self.interlocutor = User.objects.create(username='test1',
+                                                password='testpswd')
 
     def test_messages_detail_view_basic(self):
         """
