@@ -3,3 +3,5 @@ south==1.0.2
 Pillow==3.4.2
 django-registration-redux==1.1
 42cc-pystyle
+setuptools>=28.8.0
+flake8==3.0.4
