@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'apps.general',
     'apps.hello',
     'apps.requests_history',
+    'apps.messages',
 )
 
 MIDDLEWARE_CLASSES = (
