@@ -34,5 +34,6 @@ urlpatterns = patterns(
         name='requests_history'),
     url(r'^pull_new_requests/$',
         requests_hisory_views.RequestsPullingView.as_view(),
-        name='pull_new_requests')
+        name='pull_new_requests'),
+    url('^messages/', include('messages.urls', namespace='messages')),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
