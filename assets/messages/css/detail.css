@@ -1,0 +1,24 @@
+#conversation-area {
+  background-color: #fff;
+  padding: 2vh 2vw !important;
+  overflow: auto;
+}
+
+.msg {
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  margin-bottom: 2vh;
+  padding: 1vh 1vw;
+}
+
+.received-msg {
+  margin-right: 20%;
+}
+
+.sent-msg {
+  margin-left: 20%;
+}
+
+.msg hr {
+  margin: 1vh 0;
+}

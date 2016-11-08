@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}Conversation with Somebody{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static "messages/css/detail.css" %}">
+{% endblock %}
+
+{% block content %}
+  <div id="conversation-area" class="well well-sm">
+    <div class="msg received-msg">
+      <b class="sender">Somebody</b>
+      <i>at Nov. 8, 2016, 8:00 p.m.</i>
+      <hr>
+      <p>hi!</p>
+    </div>
+    <div class="msg received-msg">
+      <b class="sender">Somebody</b>
+      <i>at Nov. 8, 2016, 8:00 p.m.</i>
+      <hr>
+      <p>how you feel?</p>
+    </div>
+    <div class="msg sent-msg">
+      <b class="sender">You</b>
+      <i>at Nov. 8, 2016, 8:00 p.m.</i>
+      <hr>
+      <p>Hello! I am OK. And you?</p>
+    </div>
+    <div class="msg received-msg">
+      <b class="sender">Somebody</b>
+      <i>at Nov. 8, 2016, 8:00 p.m.</i>
+      <hr>
+      <p>i am too!</p>
+    </div>
+    <div class="msg sent-msg">
+      <b class="sender">You</b>
+      <i>at Nov. 8, 2016, 8:00 p.m.</i>
+      <hr>
+      <p>Excelent!</p>
+    </div>
+    <div class="msg received-msg">
+      <b class="sender">Somebody</b>
+      <i>at Nov. 8, 2016, 8:00 p.m.</i>
+      <hr>
+      <p>hi!</p>
+    </div>
+    <div class="msg received-msg">
+      <b class="sender">Somebody</b>
+      <i>at Nov. 8, 2016, 8:00 p.m.</i>
+      <hr>
+      <p>how you feel?</p>
+    </div>
+    <div class="msg sent-msg">
+      <b class="sender">You</b>
+      <i>at Nov. 8, 2016, 8:00 p.m.</i>
+      <hr>
+      <p>Hello! I am OK. And you?</p>
+    </div>
+    <div class="msg received-msg">
+      <b class="sender">Somebody</b>
+      <i>at Nov. 8, 2016, 8:00 p.m.</i>
+      <hr>
+      <p>i am too!</p>
+    </div>
+    <div class="msg sent-msg">
+      <b class="sender">You</b>
+      <i>at Nov. 8, 2016, 8:00 p.m.</i>
+      <hr>
+      <p>Excelent!</p>
+    </div>
+  </div>
+  <form id="new-msg-form" method="post">{% csrf_token %}
+    <div class="input-group">
+      <input type=text class="form-control" required placeholder="Type your message here..." />
+      <span class="input-group-btn">
+        <button type="send" class="btn btn-info">Send</button>
+      </span>
+    </div>
+  </form>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static "messages/js/detail.js" %}"></script>
+{% endblock %}
