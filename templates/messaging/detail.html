@@ -73,7 +73,8 @@
   </div>
   <form id="new-msg-form" method="post">{% csrf_token %}
     <div class="input-group">
-      <input type=text class="form-control" required placeholder="Type your message here..." />
+      <input id="msg-input" type="text" class="form-control" required
+       placeholder="Type your message here..." />
       <span class="input-group-btn">
         <button type="send" class="btn btn-info">Send</button>
       </span>
@@ -83,4 +84,5 @@
 
 {% block scripts %}
   <script src="{% static "messages/js/detail.js" %}"></script>
+  <script src="{% static "messages/js/process_messages.js" %}"></script>
 {% endblock %}
