@@ -5,15 +5,26 @@
 
 {% block content %}
   <h3>People you can send messages to:</h3>
-  <button class="btn btn-default">
+  <a class="btn btn-default"
+   href="{% url "messaging:detail" username="Somebody" %}">
     Somebody
     <span class="badge">2</span>
-  </button>
-  <button class="btn btn-default">Somebody1</button>
-  <button class="btn btn-default">Somebody2</button>
-  <button class="btn btn-default">
+  </a>
+  <a class="btn btn-default"
+   href="{% url "messaging:detail" username="Somebody1" %}">
+    Somebody1
+  </a>
+  <a class="btn btn-default"
+   href="{% url "messaging:detail" username="Somebody2" %}">
+    Somebody2
+  </a>
+  <a class="btn btn-default"
+   href="{% url "messaging:detail" username="Somebody3" %}">
     Somebody3
     <span class="badge">1</span>
-  </button>
-  <button class="btn btn-default">Somebody4</button>
+  </a>
+  <a class="btn btn-default"
+   href="{% url "messaging:detail" username="Somebody4" %}">
+    Somebody4
+  </a>
 {% endblock %}
