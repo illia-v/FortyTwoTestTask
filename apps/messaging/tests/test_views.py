@@ -1,24 +1,24 @@
 from django.contrib.auth.models import User
 from django.test import RequestFactory, TestCase
 
-from ..views import MessagesDetailView, MessagesIndexView
+from ..views import MessagingDetailView, MessagingIndexView
 
 
-class TestMessagesIndexView(TestCase):
+class TestMessagingIndexView(TestCase):
     """
     A test case for a view `MessagesIndexView`
     """
     def setUp(self):
         self.user = User.objects.create(username='test', password='testpswd')
 
-    def test_messages_index_view_basic(self):
+    def test_messaging_index_view_basic(self):
         """
-        Ensures that `MessagesIndexView` uses an appropriate template and
-        authenticated users can get its response
+        Ensures that `MessagingIndexView` uses an appropriate template
+        and authenticated users can get its response
         """
-        request = RequestFactory().get('/messages/')
+        request = RequestFactory().get('/messaging/')
         request.user = self.user
-        response = MessagesIndexView.as_view()(request)
+        response = MessagingIndexView.as_view()(request)
 
         self.assertTemplateUsed(response, 'messages/index.html',
                                 'Should use an appropriate template')
@@ -27,35 +27,35 @@ class TestMessagesIndexView(TestCase):
 
     def test_anonymous(self):
         """
-        Ensures that `MessagesIndexView` is not accessed when user is not
-        authenticated
+        Ensures that `MessagingIndexView` is not accessed when user is
+        not authenticated
         """
-        response_for_anonymous = self.client.get('/messages/')
+        response_for_anonymous = self.client.get('/messaging/')
         self.assertIn('login', response_for_anonymous.url,
                       'Should redirect to login')
 
 
-class TestMessagesDetailView(TestCase):
+class TestMessagingDetailView(TestCase):
     """
-    A test case for a view `MessagesDetailView`
+    A test case for a view `MessagingDetailView`
     """
     def setUp(self):
         self.user = User.objects.create(username='test', password='testpswd')
         self.interlocutor = User.objects.create(username='test1',
                                                 password='testpswd')
 
-    def test_messages_detail_view_basic(self):
+    def test_messaging_detail_view_basic(self):
         """
-        Ensures that `MessagesDetailView` uses an appropriate template and
+        Ensures that `MessagingDetailView` uses an appropriate template and
         authenticated users can get its response
         """
         request = RequestFactory().get(
-            '/messages/%s/' % self.interlocutor.username
+            '/messaging/%s/' % self.interlocutor.username
         )
         request.user = self.user
-        response = MessagesDetailView.as_view()(request)
+        response = MessagingDetailView.as_view()(request)
 
-        self.assertTemplateUsed(response, 'messages/detail.html',
+        self.assertTemplateUsed(response, 'messaging/detail.html',
                                 'Should use an appropriate template')
         self.assertEqual(response.status_code, 200,
                          'Should be callable by a registered user')
@@ -66,7 +66,7 @@ class TestMessagesDetailView(TestCase):
         authenticated
         """
         response_for_anonymous = self.client.get(
-            '/messages/%s/' % self.interlocutor.username
+            '/messaging/%s/' % self.interlocutor.username
         )
         self.assertIn('login', response_for_anonymous.url,
                       'Should redirect to login')

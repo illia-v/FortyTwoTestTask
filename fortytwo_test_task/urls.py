@@ -35,5 +35,5 @@ urlpatterns = patterns(
     url(r'^pull_new_requests/$',
         requests_hisory_views.RequestsPullingView.as_view(),
         name='pull_new_requests'),
-    url('^messages/', include('messages.urls', namespace='messages')),
+    url('^messaging/', include('messaging.urls', namespace='messaging')),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
