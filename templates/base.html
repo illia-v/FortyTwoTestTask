@@ -23,11 +23,13 @@
         <p class="text-right">
           <button type="button" class="btn btn-xs btn-info" data-toggle="modal"
            data-target="#login-modal">Log in</button>
-          <a href="/register/" class="btn btn-xs btn-info">Sign up</a>
+          <a href="{% url "register" %}" class="btn btn-xs btn-info">
+            Sign up
+          </a>
         </p>
       {% else %}
         <p class="text-right">
-          <a href="/logout/" class="btn btn-xs btn-info">Log out</a>
+          <a href="{% url "logout" %}" class="btn btn-xs btn-info">Log out</a>
         </p>
       {% endif %}
     </header>
