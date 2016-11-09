@@ -101,3 +101,11 @@ class TestMessagingDetailView(TestCase):
         message_form = self.response.context_data['form']
         self.assertIs(type(message_form), MessageForm,
                       'Should return a `MessageForm` instance in context')
+
+    def test_messaging_index_view_returns_interlocutor_username(self):
+        """
+        Ensures that `MessagesIndexView` returns `interlocutor_username`
+        in context
+        """
+        self.assertIn('interlocutor_username', self.response.context_data,
+                      'Should return `interlocutor_username` in context')
