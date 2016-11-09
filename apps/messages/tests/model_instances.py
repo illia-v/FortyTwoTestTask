@@ -1,12 +1,23 @@
+import random
+import string
+
 from django.contrib.auth.models import User
 
 from .. import models
 
 
 def conversation():
-    user1 = User.objects.create(username='test', password='testpswd')
-    user2 = User.objects.create(username='test1', password='testpswd')
-    return models.Conversation.objects.create(interlocutors=[user1, user2])
+    def random_username():
+        return ''.join(
+            (random.choice(string.ascii_lowercase) for i in range(10))
+        )
+
+    conversation = models.Conversation.objects.create()
+    conversation.interlocutors.add(
+        User.objects.create(username=random_username()),
+        User.objects.create(username=random_username())
+    )
+    return conversation
 
 
 def message():
