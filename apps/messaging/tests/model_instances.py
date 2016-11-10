@@ -20,10 +20,12 @@ def conversation():
     return conversation
 
 
-def message():
+def message(conversation_for_message=None):
+    if not conversation_for_message:
+        conversation_for_message = conversation()
     return models.Message.objects.create(
-        conversation=conversation(),
-        sender=conversation().interlocutors.first(),
+        conversation=conversation_for_message,
+        sender=conversation_for_message.interlocutors.first(),
         body='Hello my friend!',
         read=False
     )
