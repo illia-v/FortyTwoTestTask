@@ -24,7 +24,7 @@ class MessagingIndexView(TemplateView):
                     interlocutors__exact=user
                 ).select_related('message_set').get(
                     interlocutors__exact=interlocutor
-                ).message_set.filter(read=False).count()
+                ).message_set.filter(read=False, sender=interlocutor).count()
             except ObjectDoesNotExist:
                 unread_count = 0
 
