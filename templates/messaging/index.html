@@ -5,26 +5,13 @@
 
 {% block content %}
   <h3>People you can send messages to:</h3>
-  <a class="btn btn-default"
-   href="{% url "messaging:detail" username="Somebody" %}">
-    Somebody
-    <span class="badge">2</span>
-  </a>
-  <a class="btn btn-default"
-   href="{% url "messaging:detail" username="Somebody1" %}">
-    Somebody1
-  </a>
-  <a class="btn btn-default"
-   href="{% url "messaging:detail" username="Somebody2" %}">
-    Somebody2
-  </a>
-  <a class="btn btn-default"
-   href="{% url "messaging:detail" username="Somebody3" %}">
-    Somebody3
-    <span class="badge">1</span>
-  </a>
-  <a class="btn btn-default"
-   href="{% url "messaging:detail" username="Somebody4" %}">
-    Somebody4
-  </a>
+  {% for interlocutor, unread_messages_count in interlocutors_with_unread_messages_count %}
+    <a class="btn btn-default"
+     href="{% url "messaging:detail" username=interlocutor.username %}">
+      {{ interlocutor.username }}
+      {% if unread_messages_count %}
+        <span class="badge">{{ unread_messages_count }}</span>
+      {% endif %}
+    </a>
+  {% endfor %}
 {% endblock %}

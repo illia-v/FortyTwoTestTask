@@ -2,7 +2,7 @@
 {% load static %}
 
 
-{% block title %}Conversation with Somebody{% endblock %}
+{% block title %}Conversation with {{ interlocutor_username }}{% endblock %}
 
 {% block stylesheets %}
   <link rel="stylesheet" href="{% static "messages/css/detail.css" %}">
@@ -10,71 +10,23 @@
 
 {% block content %}
   <div id="conversation-area" class="well well-sm">
-    <div class="msg received-msg">
-      <b class="sender">Somebody</b>
-      <i>at Nov. 8, 2016, 8:00 p.m.</i>
-      <hr>
-      <p>hi!</p>
-    </div>
-    <div class="msg received-msg">
-      <b class="sender">Somebody</b>
-      <i>at Nov. 8, 2016, 8:00 p.m.</i>
-      <hr>
-      <p>how you feel?</p>
-    </div>
-    <div class="msg sent-msg">
-      <b class="sender">You</b>
-      <i>at Nov. 8, 2016, 8:00 p.m.</i>
-      <hr>
-      <p>Hello! I am OK. And you?</p>
-    </div>
-    <div class="msg received-msg">
-      <b class="sender">Somebody</b>
-      <i>at Nov. 8, 2016, 8:00 p.m.</i>
-      <hr>
-      <p>i am too!</p>
-    </div>
-    <div class="msg sent-msg">
-      <b class="sender">You</b>
-      <i>at Nov. 8, 2016, 8:00 p.m.</i>
-      <hr>
-      <p>Excelent!</p>
-    </div>
-    <div class="msg received-msg">
-      <b class="sender">Somebody</b>
-      <i>at Nov. 8, 2016, 8:00 p.m.</i>
-      <hr>
-      <p>hi!</p>
-    </div>
-    <div class="msg received-msg">
-      <b class="sender">Somebody</b>
-      <i>at Nov. 8, 2016, 8:00 p.m.</i>
-      <hr>
-      <p>how you feel?</p>
-    </div>
-    <div class="msg sent-msg">
-      <b class="sender">You</b>
-      <i>at Nov. 8, 2016, 8:00 p.m.</i>
-      <hr>
-      <p>Hello! I am OK. And you?</p>
-    </div>
-    <div class="msg received-msg">
-      <b class="sender">Somebody</b>
-      <i>at Nov. 8, 2016, 8:00 p.m.</i>
-      <hr>
-      <p>i am too!</p>
-    </div>
-    <div class="msg sent-msg">
-      <b class="sender">You</b>
-      <i>at Nov. 8, 2016, 8:00 p.m.</i>
-      <hr>
-      <p>Excelent!</p>
-    </div>
+    {% for message in all_messages %}
+      {% if message.sender == user %}
+      <div class="msg sent-msg">
+        <b class="sender">You</b>
+      {% else %}
+      <div class="msg received-msg">
+        <b class="sender">{{ interlocutor_username }}</b>
+      {% endif %}
+        <i>at {{ message.timestamp }}</i>
+        <hr>
+        <p>{{ message.body }}</p>
+      </div>
+    {% endfor %}
   </div>
   <form id="new-msg-form" method="post">{% csrf_token %}
     <div class="input-group">
-      <input id="msg-input" type="text" class="form-control" required
-       placeholder="Type your message here..." />
+      {{ form.message }}
       <span class="input-group-btn">
         <button type="send" class="btn btn-info">Send</button>
       </span>
