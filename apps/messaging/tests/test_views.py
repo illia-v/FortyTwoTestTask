@@ -86,12 +86,12 @@ class TestMessagingDetailView(TestCase):
 
     def test_messaging_index_view_returns_messages(self):
         """
-        Ensures that `MessagesIndexView` returns `QuerySet` `messages`
+        Ensures that `MessagesIndexView` returns `QuerySet` `all_messages`
         in context
         """
-        messages = self.response.context_data['messages']
+        messages = self.response.context_data['all_messages']
         self.assertIs(type(messages), QuerySet,
-                      'Should return `QuerySet` `messages` in context')
+                      'Should return `QuerySet` `all_messages` in context')
 
     def test_messaging_index_view_returns_message_form(self):
         """

@@ -67,6 +67,6 @@ class MessagingDetailView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(MessagingDetailView, self).get_context_data(**kwargs)
-        context['messages'] = self.get_messages()
+        context['all_messages'] = self.get_messages()
         context['interlocutor_username'] = self.get_interlocutor_username()
         return context
