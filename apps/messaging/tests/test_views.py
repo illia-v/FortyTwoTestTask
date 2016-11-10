@@ -134,7 +134,7 @@ class TestMessagingCreateView(TestCase):
 
         request = RequestFactory().post(
             self.url,
-            {'message_body': 'Hello world!'},
+            {'message': 'Hello world!'},
             HTTP_X_REQUESTED_WITH='XMLHttpRequest'
         )
         request.user = self.user
@@ -165,7 +165,7 @@ class TestMessagingCreateView(TestCase):
         request is not made via AJAX
         """
         request = RequestFactory().post(self.url,
-                                        {'message_body': 'Hello world!'})
+                                        {'message': 'Hello world!'})
         request.user = self.user
         response = views.MessagingCreateView.as_view()(request)
         self.assertEqual(
