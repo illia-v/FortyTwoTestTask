@@ -80,8 +80,10 @@ class TestHelloEditView(TestCase):
         authenticated
         """
         response_for_anonymous = self.client.get(self.url)
-        self.assertIn('login', response_for_anonymous.url,
-                      'Should redirect to login')
+        self.assertRedirects(
+            response_for_anonymous,
+            reverse('login') + '?next=%s' % self.url
+        )
 
     def test_hello_edit_view_template_output(self):
         """
