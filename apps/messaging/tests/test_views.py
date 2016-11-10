@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.test import RequestFactory, TestCase
 
 from ..views import MessagingDetailView, MessagingIndexView
@@ -10,13 +11,14 @@ class TestMessagingIndexView(TestCase):
     """
     def setUp(self):
         self.user = User.objects.create(username='test', password='testpswd')
+        self.url = reverse('messaging:index')
 
     def test_messaging_index_view_basic(self):
         """
         Ensures that `MessagingIndexView` uses an appropriate template
         and authenticated users can get its response
         """
-        request = RequestFactory().get('/messaging/')
+        request = RequestFactory().get(self.url)
         request.user = self.user
         response = MessagingIndexView.as_view()(request)
 
@@ -30,7 +32,7 @@ class TestMessagingIndexView(TestCase):
         Ensures that `MessagingIndexView` is not accessed when user is
         not authenticated
         """
-        response_for_anonymous = self.client.get('/messaging/')
+        response_for_anonymous = self.client.get(self.url)
         self.assertIn('login', response_for_anonymous.url,
                       'Should redirect to login')
 
@@ -43,15 +45,15 @@ class TestMessagingDetailView(TestCase):
         self.user = User.objects.create(username='test', password='testpswd')
         self.interlocutor = User.objects.create(username='test1',
                                                 password='testpswd')
+        self.url = reverse('messaging:detail',
+                           args=[self.interlocutor.username])
 
     def test_messaging_detail_view_basic(self):
         """
         Ensures that `MessagingDetailView` uses an appropriate template and
         authenticated users can get its response
         """
-        request = RequestFactory().get(
-            '/messaging/%s/' % self.interlocutor.username
-        )
+        request = RequestFactory().get(self.url)
         request.user = self.user
         response = MessagingDetailView.as_view()(request)
 
@@ -65,8 +67,6 @@ class TestMessagingDetailView(TestCase):
         Ensures that `MessagesDetailView` is not accessed when user is not
         authenticated
         """
-        response_for_anonymous = self.client.get(
-            '/messaging/%s/' % self.interlocutor.username
-        )
+        response_for_anonymous = self.client.get(self.url)
         self.assertIn('login', response_for_anonymous.url,
                       'Should redirect to login')

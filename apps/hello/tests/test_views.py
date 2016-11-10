@@ -2,6 +2,7 @@ import re
 import cgi
 
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.test import RequestFactory, TestCase
 
 from .model_instances import person_info
@@ -15,7 +16,7 @@ class TestHelloView(TestCase):
     """
     def setUp(self):
         person_info()
-        self.response = self.client.get('/')
+        self.response = self.client.get(reverse('hello'))
 
     def test_hello_view_basic(self):
         """
@@ -57,13 +58,14 @@ class TestHelloEditView(TestCase):
     def setUp(self):
         person_info()
         self.user = User.objects.create(username='test', password='testpswd')
+        self.url = reverse('edit_hello')
 
     def test_hello_edit_view_basic(self):
         """
         Ensures that `HelloEditView` uses an appropriate template and
         authenticated users can get its response
         """
-        request = RequestFactory().get('/')
+        request = RequestFactory().get(self.url)
         request.user = self.user
         response = HelloEditView.as_view()(request)
 
@@ -77,7 +79,7 @@ class TestHelloEditView(TestCase):
         Ensures that `HelloEditView` is not accessed when user is not
         authenticated
         """
-        response_for_anonymous = self.client.get("/edit_hello/")
+        response_for_anonymous = self.client.get(self.url)
         self.assertIn('login', response_for_anonymous.url,
                       'Should redirect to login')
 
@@ -85,7 +87,7 @@ class TestHelloEditView(TestCase):
         """
         Ensures that output of a `HelloEditView` teplate is valid
         """
-        request = RequestFactory().get('/')
+        request = RequestFactory().get(self.url)
         request.user = self.user
         response_content = HelloEditView.as_view()(request)._container[0]
         person = PersonInfo.objects.first()
