@@ -17,7 +17,8 @@ class TestMessagingIndexView(TestCase):
     """
     def setUp(self):
         self.user = User.objects.create(username='test', password='testpswd')
-        request = RequestFactory().get('/messaging/')
+        self.url = reverse('messaging:index')
+        request = RequestFactory().get(self.url)
         request.user = self.user
         self.response = views.MessagingIndexView.as_view()(request)
 
@@ -36,9 +37,11 @@ class TestMessagingIndexView(TestCase):
         Ensures that `MessagingIndexView` is not accessed when user is
         not authenticated
         """
-        response_for_anonymous = self.client.get('/messaging/')
-        self.assertIn('login', response_for_anonymous.url,
-                      'Should redirect to login')
+        response_for_anonymous = self.client.get(self.url)
+        self.assertRedirects(
+            response_for_anonymous,
+            reverse('login') + '?next=%s' % self.url
+        )
 
     def test_messaging_index_view_returns_interlocutors(self):
         """
@@ -61,9 +64,10 @@ class TestMessagingDetailView(TestCase):
     def setUp(self):
         self.interlocutor = User.objects.create(username='test1',
                                                 password='testpswd')
-        request = RequestFactory().get(
-            '/messaging/%s/' % self.interlocutor.username
-        )
+
+        self.url = reverse('messaging:detail',
+                           args=[self.interlocutor.username])
+        request = RequestFactory().get(self.url)
         request.user = User.objects.create(username='test',
                                            password='testpswd')
         self.response = views.MessagingDetailView.as_view()(request)
@@ -83,11 +87,11 @@ class TestMessagingDetailView(TestCase):
         Ensures that `MessagesDetailView` is not accessed when user is not
         authenticated
         """
-        response_for_anonymous = self.client.get(
-            '/messaging/%s/' % self.interlocutor.username
+        response_for_anonymous = self.client.get(self.url)
+        self.assertRedirects(
+            response_for_anonymous,
+            reverse('login') + '?next=%s' % self.url
         )
-        self.assertIn('login', response_for_anonymous.url,
-                      'Should redirect to login')
 
     def test_messaging_index_view_returns_messages(self):
         """

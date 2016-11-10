@@ -1,5 +1,6 @@
 import json
 
+from django.core.urlresolvers import reverse
 from django.db.models.query import QuerySet
 from django.test import RequestFactory, TestCase
 
@@ -16,7 +17,7 @@ class TestRequestsHistoryView(TestCase):
         for i in range(11):
             request()
         self.response = views.RequestsHistoryView.as_view()(
-            RequestFactory().get('/requests_history/')
+            RequestFactory().get(reverse('requests_history'))
         )
 
     def test_requests_history_view_basic(self):
@@ -58,7 +59,8 @@ class TestRequestsPullingView(TestCase):
         for i in range(12):
             request()
         response = views.RequestsPullingView.as_view()(
-            RequestFactory().get('/', {'last_request_id': 10})
+            RequestFactory().get(reverse('pull_new_requests'),
+                                 {'last_request_id': 10})
         )
         self.new_requests = json.loads(response.content)
 
