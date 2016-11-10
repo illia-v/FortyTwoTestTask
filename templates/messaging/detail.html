@@ -12,10 +12,10 @@
   <div id="conversation-area" class="well well-sm">
     {% for message in all_messages %}
       {% if message.sender == user %}
-      <div class="msg sent-msg">
+      <div class="msg sent-msg" data-msg-id="{{ message.id }}">
         <b class="sender">You</b>
       {% else %}
-      <div class="msg received-msg">
+      <div class="msg received-msg" data-msg-id="{{ message.id }}">
         <b class="sender">{{ interlocutor_username }}</b>
       {% endif %}
         <i>at {{ message.timestamp }}</i>
@@ -35,6 +35,12 @@
 {% endblock %}
 
 {% block scripts %}
+  <script>
+    var messagingPullPageURL = "{% url "messaging:pull" username=interlocutor_username %}";
+    var messagingCreatePageURL = "{% url "messaging:create" username=interlocutor_username %}";
+  </script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js">
+  </script>
   <script src="{% static "messages/js/detail.js" %}"></script>
   <script src="{% static "messages/js/process_messages.js" %}"></script>
 {% endblock %}
