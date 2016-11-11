@@ -42,6 +42,13 @@ class MessagingIndexView(TemplateView):
         return context
 
 
+class MessagingViewWithInterlocutor(object):
+    def get_interlocutor(self):
+        """Gets a `User` instance interlocutor from a path of a request"""
+        interlocutors_username = self.request.path.split('/')[2]
+        return get_object_or_404(User, username=interlocutors_username)
+
+
 class MessagingDetailView(FormView):
     form_class = MessageForm
     template_name = 'messaging/detail.html'
