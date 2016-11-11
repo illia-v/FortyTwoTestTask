@@ -4,8 +4,9 @@ from django import http
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
 from django.utils.formats import date_format
-from django.views.generic import FormView, TemplateView, View
+from django.views.generic import CreateView, FormView, TemplateView, View
 
 from .forms import MessageForm
 from .models import Conversation, Message
@@ -42,19 +43,20 @@ class MessagingIndexView(TemplateView):
         return context
 
 
-class MessagingDetailView(FormView):
+class MessagingViewWithInterlocutor(object):
+    def get_interlocutor(self):
+        """Gets a `User` instance interlocutor from a path of a request"""
+        interlocutors_username = self.request.path.split('/')[2]
+        return get_object_or_404(User, username=interlocutors_username)
+
+
+class MessagingDetailView(MessagingViewWithInterlocutor, FormView):
     form_class = MessageForm
     template_name = 'messaging/detail.html'
 
-    def get_interlocutor_username(self):
-        """Gets interlocutor's username from a path of a request"""
-        return self.request.path.split('/')[2]
-
     def get_messages(self):
         user = self.request.user
-        interlocutor = get_object_or_404(
-            User, username=self.get_interlocutor_username()
-        )
+        interlocutor = self.get_interlocutor()
 
         try:
             conversation = Conversation.objects.filter(
@@ -72,34 +74,33 @@ class MessagingDetailView(FormView):
     def get_context_data(self, **kwargs):
         context = super(MessagingDetailView, self).get_context_data(**kwargs)
         context['all_messages'] = self.get_messages()
-        context['interlocutor_username'] = self.get_interlocutor_username()
+        context['interlocutor_username'] = self.get_interlocutor().username
         return context
 
 
-class MessagingCreateView(View):
-    def post(self, request, *args, **kwargs):
+def ajax_request(function):
+    def wrapper(request, *args, **kwargs):
         if not request.is_ajax():
             return http.HttpResponseBadRequest()
+        return function(request, *args, **kwargs)
+    return wrapper
 
-        try:
-            message_body = request.POST['message']
-        except KeyError:
-            return http.HttpResponseBadRequest()
 
-        form = MessageForm({'message': message_body})
+class MessagingCreateView(MessagingViewWithInterlocutor, CreateView):
+    def get(self, request, *args, **kwargs):
+        return http.HttpResponseNotAllowed(['POST'])
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
         if not form.is_valid():
             return http.HttpResponse(json.dumps(form.errors),
                                      content_type='application/json')
-
-        # interlocutor's username from a path of a request
-        interlocutors_username = request.path.split('/')[2]
-        interlocutor = get_object_or_404(User, username=interlocutors_username)
 
         try:
             conversation = Conversation.objects.filter(
                 interlocutors__exact=request.user
             ).select_related('message_set').get(
-                interlocutors__exact=interlocutor
+                interlocutors__exact=self.get_interlocutor()
             )
         except ObjectDoesNotExist:
             raise http.Http404
@@ -107,7 +108,7 @@ class MessagingCreateView(View):
         message = Message.objects.create(
             conversation=conversation,
             sender=request.user,
-            body=message_body
+            body=self.get_message_body()
         )
 
         message_dict = {
@@ -120,20 +121,23 @@ class MessagingCreateView(View):
         return http.HttpResponse(json.dumps(message_dict),
                                  content_type='application/json')
 
+    @method_decorator(ajax_request)
+    def dispatch(self, *args, **kwargs):
+        return super(MessagingCreateView, self).dispatch(*args, **kwargs)
 
-class MessagingPullView(View):
-    def get(self, request, *args, **kwargs):
-        if not request.is_ajax():
-            return http.HttpResponseBadRequest()
+    def get_form(self):
+        return MessageForm({'message': self.get_message_body()})
 
+    def get_message_body(self):
         try:
-            last_message_id = int(request.GET['last_message_id'])
-        except (KeyError, ValueError):
+            return self.request.POST['message']
+        except KeyError:
             return http.HttpResponseBadRequest()
 
-        # interlocutor's username from a path of a request
-        interlocutors_username = request.path.split('/')[2]
-        interlocutor = get_object_or_404(User, username=interlocutors_username)
+
+class MessagingPullView(MessagingViewWithInterlocutor, View):
+    def get(self, request, *args, **kwargs):
+        interlocutor = self.get_interlocutor()
 
         try:
             messages = Conversation.objects.filter(
@@ -144,6 +148,7 @@ class MessagingPullView(View):
         except ObjectDoesNotExist:
             raise http.Http404
 
+        last_message_id = self.get_last_message_id()
         # If a clients page is up to date
         if messages.last() is None or messages.last().id == last_message_id:
             return http.HttpResponse('[]', content_type='application/json')
@@ -164,3 +169,13 @@ class MessagingPullView(View):
 
         return http.HttpResponse(json.dumps(new_messages),
                                  content_type='application/json')
+
+    @method_decorator(ajax_request)
+    def dispatch(self, *args, **kwargs):
+        return super(MessagingPullView, self).dispatch(*args, **kwargs)
+
+    def get_last_message_id(self):
+        try:
+            return int(self.request.GET['last_message_id'])
+        except (KeyError, ValueError):
+            return http.HttpResponseBadRequest()
