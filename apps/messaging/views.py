@@ -10,6 +10,7 @@ from django.views.generic import CreateView, FormView, TemplateView, View
 
 from .forms import MessageForm
 from .models import Conversation, Message
+from .views_decorators import ajax_request
 
 
 class MessagingIndexView(TemplateView):
@@ -76,14 +77,6 @@ class MessagingDetailView(MessagingViewWithInterlocutor, FormView):
         context['all_messages'] = self.get_messages()
         context['interlocutor_username'] = self.get_interlocutor().username
         return context
-
-
-def ajax_request(function):
-    def wrapper(request, *args, **kwargs):
-        if not request.is_ajax():
-            return http.HttpResponseBadRequest()
-        return function(request, *args, **kwargs)
-    return wrapper
 
 
 class MessagingCreateView(MessagingViewWithInterlocutor, CreateView):
