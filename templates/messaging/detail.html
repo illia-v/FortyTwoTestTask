@@ -38,6 +38,7 @@
   <script>
     var messagingPullPageURL = "{% url "messaging:pull" username=interlocutor_username %}";
     var messagingCreatePageURL = "{% url "messaging:create" username=interlocutor_username %}";
+    var resetUnreadCountURL = "{% url "messaging:reset_unread_count" username=interlocutor_username %}";
   </script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js">
   </script>

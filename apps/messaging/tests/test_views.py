@@ -121,7 +121,41 @@ class TestMessagingDetailView(TestCase):
                       'Should return `interlocutor_username` in context')
 
 
-class TestMessagingCreateView(TestCase):
+class TestMessagingAjaxView(object):
+    def test_view_basic(self):
+        """
+        Ensures that authenticated users can get response of the view
+        """
+        self.assertEqual(self.response.status_code, 200,
+                         'Should be callable by a registered user')
+
+    def test_anonymous(self):
+        """
+        Ensures that the view is not accessed when user is not
+        authenticated
+        """
+        response_for_anonymous = self.client.get(self.url)
+        self.assertRedirects(
+            response_for_anonymous,
+            reverse('login') + '?next=%s' % self.url
+        )
+
+    def test_view_accepts_only_ajax_requests(self):
+        """
+        Ensures that the view raises HTTP error 400 if a request is not
+        made via AJAX
+        """
+        request = RequestFactory().post(self.url,
+                                        {'message': 'Hello world!'})
+        request.user = self.user
+        response = views.MessagingCreateView.as_view()(request)
+        self.assertEqual(
+            response.status_code, 400,
+            'Should raise HTTP error 400 if a request is not made via AJAX'
+        )
+
+
+class TestMessagingCreateView(TestMessagingAjaxView, TestCase):
     """
     A test case for a view `MessagingCreateView`
     """
@@ -144,39 +178,6 @@ class TestMessagingCreateView(TestCase):
         )
         request.user = self.user
         self.response = views.MessagingCreateView.as_view()(request)
-
-    def test_messaging_create_view_basic(self):
-        """
-        Ensures that authenticated users can get response of
-        `MessagingCreateView`
-        """
-        self.assertEqual(self.response.status_code, 200,
-                         'Should be callable by a registered user')
-
-    def test_anonymous(self):
-        """
-        Ensures that `MessagingCreateView` is not accessed when user is
-        not authenticated
-        """
-        response_for_anonymous = self.client.get(self.url)
-        self.assertRedirects(
-            response_for_anonymous,
-            reverse('login') + '?next=%s' % self.url
-        )
-
-    def test_messaging_create_view_accepts_only_ajax_requests(self):
-        """
-        Ensures that `MessagingCreateView` raises HTTP error 400 if a
-        request is not made via AJAX
-        """
-        request = RequestFactory().post(self.url,
-                                        {'message': 'Hello world!'})
-        request.user = self.user
-        response = views.MessagingCreateView.as_view()(request)
-        self.assertEqual(
-            response.status_code, 400,
-            'Should raise HTTP error 400 if a request is not made via AJAX'
-        )
 
     def test_messaging_create_view_creates_message(self):
         """
@@ -203,7 +204,7 @@ class TestMessagingCreateView(TestCase):
                              'Should contain `timestamp` of a message')
 
 
-class TestMessagingPullView(TestCase):
+class TestMessagingPullView(TestMessagingAjaxView, TestCase):
     def setUp(self):
         interlocutor = User.objects.create(username='test1',
                                            password='testpswd')
@@ -226,38 +227,6 @@ class TestMessagingPullView(TestCase):
         self.response = views.MessagingPullView.as_view()(request)
 
         self.new_messages = json.loads(self.response.content)
-
-    def test_messaging_pull_view_basic(self):
-        """
-        Ensures that authenticated users can get response of
-        `MessagingPullView`
-        """
-        self.assertEqual(self.response.status_code, 200,
-                         'Should be callable by a registered user')
-
-    def test_anonymous(self):
-        """
-        Ensures that `MessagingPullView` is not accessed when user is
-        not authenticated
-        """
-        response_for_anonymous = self.client.get(self.url)
-        self.assertRedirects(
-            response_for_anonymous,
-            reverse('login') + '?next=%s' % self.url
-        )
-
-    def test_messaging_pull_view_accepts_only_ajax_requests(self):
-        """
-        Ensures that `MessagingPullView` raises HTTP error 400 if a
-        request is not made via AJAX
-        """
-        request = RequestFactory().get(self.url, {'last_message_id': 3})
-        request.user = self.user
-        response = views.MessagingPullView.as_view()(request)
-        self.assertEqual(
-            response.status_code, 400,
-            'Should raise HTTP error 400 if a request is not made via AJAX'
-        )
 
     def test_messaging_pull_view_returns_all_new_messages(self):
         """
@@ -315,3 +284,76 @@ class TestMessagingViewWithInterlocutor(TestCase):
                 reverse('messaging:detail', args=['random_username'])
             )
             self.view.get_interlocutor()
+
+
+class TestMessagingUpdateUnreadCountView(TestMessagingAjaxView, TestCase):
+    def setUp(self):
+        interlocutor = User.objects.create(username='test1',
+                                           password='testpswd')
+        self.user = User.objects.create(username='test', password='testpswd')
+
+        conversation = Conversation.objects.create()
+        conversation.interlocutors.add(self.user, interlocutor)
+        conversation.save()
+
+        for i in range(5):
+            message(conversation)
+
+        self.url = reverse('messaging:update_unread_count')
+        request = RequestFactory().get(
+            self.url, HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
+        request.user = self.user
+        self.response = views.MessagingUpdateUnreadCountView.as_view()(request)
+
+        self.conversations_with_unread_count = json.loads(
+            self.response.content
+        )
+
+    def test_messaging_update_unread_count_view_returns_all_data(self):
+        """
+        Ensures that a JSON object returned by
+        `MessagingUpdateUnreadCountView` has all required data
+        """
+        conversation_with_unread_count = (
+            self.conversations_with_unread_count[0]
+        )
+        self.assertIsNotNone(
+            conversation_with_unread_count.get('interlocutor', None),
+            'Should contain `interlocutor`')
+        self.assertIsNotNone(
+            conversation_with_unread_count.get('unread_count', None),
+            'Should contain `unread_count`'
+        )
+
+
+class TestMessagingResetUnreadCountView(TestMessagingAjaxView, TestCase):
+    def setUp(self):
+        interlocutor = User.objects.create(username='test1',
+                                           password='testpswd')
+        self.user = User.objects.create(username='test', password='testpswd')
+
+        self.conversation = Conversation.objects.create()
+        self.conversation.interlocutors.add(self.user, interlocutor)
+        self.conversation.save()
+
+        for i in range(3):
+            message(self.conversation, sender=interlocutor)
+
+        self.url = reverse('messaging:reset_unread_count',
+                           args=[interlocutor.username])
+        request = RequestFactory().get(
+            self.url, HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
+        request.user = self.user
+        self.response = views.MessagingResetUnreadCountView.as_view()(request)
+
+    def test_messaging_reset_unread_count_view_reset_count(self):
+        """
+        Ensures that `MessagingResetUnreadCountView` resets count of
+        unread messages
+        """
+        self.assertEqual(
+            self.conversation.message_set.filter(read=False).count(), 0,
+            'Sould reset count of unread messages'
+        )

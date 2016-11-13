@@ -66,3 +66,14 @@ $( "#new-msg-form" ).submit(function(event) {
     ))
   });
 });
+
+
+function resetUnreadCount() {
+  $( document ).one("mouseover", function() {
+    $.get( resetUnreadCountURL );
+  });
+
+  setTimeout(resetUnreadCount, 3000);
+}
+
+resetUnreadCount();

@@ -7,6 +7,9 @@ urlpatterns = [
     url('^$',
         login_required(views.MessagingIndexView.as_view()),
         name='index'),
+    url('^update_unread_count/$',
+        login_required(views.MessagingUpdateUnreadCountView.as_view()),
+        name='update_unread_count'),
     url('^(?P<username>[\w-]+)/$',
         login_required(views.MessagingDetailView.as_view()),
         name='detail'),
@@ -16,4 +19,7 @@ urlpatterns = [
     url('^(?P<username>[\w-]+)/pull/$',
         login_required(views.MessagingPullView.as_view()),
         name='pull'),
+    url('^(?P<username>[\w-]+)/reset_unread_count/$',
+        login_required(views.MessagingResetUnreadCountView.as_view()),
+        name='reset_unread_count'),
 ]

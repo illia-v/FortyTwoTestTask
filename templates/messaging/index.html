@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 
 {% block title %}Messages{% endblock %}
@@ -6,12 +7,21 @@
 {% block content %}
   <h3>People you can send messages to:</h3>
   {% for interlocutor, unread_messages_count in interlocutors_with_unread_messages_count %}
-    <a class="btn btn-default"
+    <a class="btn btn-default" id="conversation-{{ interlocutor.username }}"
      href="{% url "messaging:detail" username=interlocutor.username %}">
       {{ interlocutor.username }}
       {% if unread_messages_count %}
-        <span class="badge">{{ unread_messages_count }}</span>
+        <span class="badge" id="unread-count-{{ interlocutor.username }}">
+          {{ unread_messages_count }}
+        </span>
       {% endif %}
     </a>
   {% endfor %}
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    var updateUnreadCountURL = "{% url "messaging:update_unread_count" %}";
+  </script>
+  <script src="{% static "messages/js/update_unread_count.js" %}"></script>
 {% endblock %}
