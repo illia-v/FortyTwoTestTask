@@ -19,4 +19,7 @@ urlpatterns = [
     url('^(?P<username>[\w-]+)/pull/$',
         login_required(views.MessagingPullView.as_view()),
         name='pull'),
+    url('^(?P<username>[\w-]+)/reset_unread_count/$',
+        login_required(views.MessagingResetUnreadCountView.as_view()),
+        name='reset_unread_count'),
 ]

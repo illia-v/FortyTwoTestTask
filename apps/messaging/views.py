@@ -214,3 +214,30 @@ class MessagingUpdateUnreadCountView(View):
             )
 
         return json.dumps(interlocutors_with_unread_messages)
+
+
+class MessagingResetUnreadCountView(MessagingViewWithInterlocutor, View):
+    def get(self, request, *args, **kwargs):
+        self.reset_unread_count()
+        return http.HttpResponse()
+
+    @method_decorator(ajax_request)
+    def dispatch(self, *args, **kwargs):
+        return super(
+            MessagingResetUnreadCountView, self
+        ).dispatch(*args, **kwargs)
+
+    def reset_unread_count(self):
+        interlocutor = self.get_interlocutor()
+        try:
+            conversation = Conversation.objects.filter(
+                interlocutors__exact=self.request.user
+            ).select_related('message_set').get(
+                interlocutors__exact=interlocutor
+            )
+        except ObjectDoesNotExist:
+            raise http.Http404
+
+        conversation.message_set.filter(
+            read=False, sender=interlocutor
+        ).update(read=True)
