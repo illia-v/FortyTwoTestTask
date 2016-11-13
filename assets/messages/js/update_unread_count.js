@@ -1,21 +1,29 @@
 function updateUnreadMessagesCount() {
-  var $allConversations = $( ".conversation" );
+  $.getJSON(updateUnreadCountURL,
+    function (allConversations) {
+      for (var conversation of allConversations) {
+        var interlocutor = conversation.interlocutor;
+        var unreadMessagesCount = conversation['unread_count'];
 
-  for (var $conversation of $allConversations) {
-    $badgeWithUnreadMessagesCount = $( ".badge", $conversation );
+        var $badgeWithUnreadCount = $( "#unread-count-" + interlocutor );
 
-    if ( $badgeWithUnreadMessagesCount.length ) {
-      $badgeWithUnreadMessagesCount.text(
-        Math.floor(Math.random() * (100 - 1 + 1) + 1)
-      );
-    } else {
-      $( "<span class='badge'>" )
-      .text( Math.floor(Math.random() * (100 - 1 + 1) + 1) )
-      .appendTo( $conversation )
+        if ( $badgeWithUnreadCount.length ) {
+          if ( unreadMessagesCount ) {
+            $badgeWithUnreadCount.text( unreadMessagesCount );
+          } else {
+            $badgeWithUnreadCount.remove();
+          }
+        } else if ( unreadMessagesCount != 0 ) {
+          $( "<span class='badge' id='unread-count-" + interlocutor + "'>" )
+          .text( unreadMessagesCount ).appendTo(
+            $( "#conversation-" + interlocutor )
+          );
+        }
+      }
     }
-  }
+  );
 
-  setTimeout(updateUnreadMessagesCount, 5000);
+  setTimeout(updateUnreadMessagesCount, 2000);
 }
 
 updateUnreadMessagesCount();
