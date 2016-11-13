@@ -67,7 +67,6 @@ class TestMessagingURLs(TestCase):
         update_unread_count = resolve(
             '/messaging/update_unread_count/'
         )
-        print update_unread_count.func.__name__
 
         self.assertEqual(
             reverse('messaging:update_unread_count'),
@@ -79,4 +78,26 @@ class TestMessagingURLs(TestCase):
             update_unread_count.func.__name__,
             'MessagingUpdateUnreadCountView',
             'Should be resolved to `MessagingUpdateUnreadCountView`'
+        )
+
+    def test_messaging_reset_unread_count_view_url(self):
+        """
+        Ensures that a URL pattern name `messaging:reset_unread_count`
+        is valid and the pattern is resolved to
+        `MessagingResetUnreadCountView`
+        """
+        reset_unread_count = resolve(
+            '/messaging/somebody/reset_unread_count/'
+        )
+
+        self.assertEqual(
+            reverse('messaging:reset_unread_count', args=['somebody']),
+            '/messaging/somebody/reset_unread_count/',
+            'A view name `messaging:update_unread_count` should be reversed '
+            'to the URL `/messaging/{username}/reset_unread_count/`'
+        )
+        self.assertEqual(
+            reset_unread_count.func.__name__,
+            'MessagingResetUnreadCountView',
+            'Should be resolved to `MessagingResetUnreadCountView`'
         )
