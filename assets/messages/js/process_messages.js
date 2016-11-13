@@ -70,9 +70,7 @@ $( "#new-msg-form" ).submit(function(event) {
 
 function resetUnreadCount() {
   $( document ).one("mouseover", function() {
-    $.post(
-      location.pathname+'reset_unread_count', {'last_message_id': lastMessageId}
-    );
+    $.get( resetUnreadCountURL );
   });
 
   setTimeout(resetUnreadCount, 3000);
