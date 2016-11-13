@@ -315,3 +315,76 @@ class TestMessagingViewWithInterlocutor(TestCase):
                 reverse('messaging:detail', args=['random_username'])
             )
             self.view.get_interlocutor()
+
+
+class TestMessagingUpdateUnreadCountView(TestCase):
+    def setUp(self):
+        interlocutor = User.objects.create(username='test1',
+                                           password='testpswd')
+        self.user = User.objects.create(username='test', password='testpswd')
+
+        conversation = Conversation.objects.create()
+        conversation.interlocutors.add(self.user, interlocutor)
+        conversation.save()
+
+        for i in range(5):
+            message(conversation)
+
+        self.url = reverse('messaging:update_unread_count')
+        request = RequestFactory().get(
+            self.url, HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
+        request.user = self.user
+        self.response = views.MessagingUpdateUnreadCountView.as_view()(request)
+
+        self.conversations_with_unread_count = json.loads(
+            self.response.content
+        )
+
+    def test_messaging_update_unread_count_view_basic(self):
+        """
+        Ensures that authenticated users can get response of
+        `MessagingUpdateUnreadCountView`
+        """
+        self.assertEqual(self.response.status_code, 200,
+                         'Should be callable by a registered user')
+
+    def test_anonymous(self):
+        """
+        Ensures that `MessagingUpdateUnreadCountView` is not accessed
+        when user is not authenticated
+        """
+        response_for_anonymous = self.client.get(self.url)
+        self.assertRedirects(
+            response_for_anonymous,
+            reverse('login') + '?next=%s' % self.url
+        )
+
+    def test_messaging_update_unread_count_accepts_only_ajax_requests(self):
+        """
+        Ensures that `MessagingUpdateUnreadCountView` raises HTTP error
+        400 if a request is not made via AJAX
+        """
+        request = RequestFactory().get(self.url)
+        request.user = self.user
+        response = views.MessagingUpdateUnreadCountView.as_view()(request)
+        self.assertEqual(
+            response.status_code, 400,
+            'Should raise HTTP error 400 if a request is not made via AJAX'
+        )
+
+    def test_messaging_update_unread_count_view_returns_all_data(self):
+        """
+        Ensures that a JSON object returned by
+        `MessagingUpdateUnreadCountView` has all required data
+        """
+        conversation_with_unread_count = (
+            self.conversations_with_unread_count[0]
+        )
+        self.assertIsNotNone(
+            conversation_with_unread_count.get('interlocutor', None),
+            'Should contain `interlocutor`')
+        self.assertIsNotNone(
+            conversation_with_unread_count.get('unread_count', None),
+            'Should contain `unread_count`'
+        )
