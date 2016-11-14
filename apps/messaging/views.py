@@ -208,7 +208,7 @@ class MessagingUpdateUnreadCountView(View):
         return json.dumps(interlocutors_with_unread_messages)
 
 
-class MessagingResetUnreadCountView(MessagingViewWithInterlocutor, View):
+class MessagingResetUnreadCountView(View):
     def get(self, request, *args, **kwargs):
         self.reset_unread_count()
         return http.HttpResponse()
@@ -220,7 +220,9 @@ class MessagingResetUnreadCountView(MessagingViewWithInterlocutor, View):
         ).dispatch(*args, **kwargs)
 
     def reset_unread_count(self):
-        interlocutor = self.get_interlocutor()
+        interlocutor = get_object_or_404(
+            User, username=self.kwargs['username']
+        )
         try:
             conversation = Conversation.objects.filter(
                 interlocutors__exact=self.request.user
