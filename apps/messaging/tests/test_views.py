@@ -71,7 +71,9 @@ class TestMessagingDetailView(TestCase):
         request = RequestFactory().get(self.url)
         request.user = User.objects.create(username='test',
                                            password='testpswd')
-        self.response = views.MessagingDetailView.as_view()(request)
+        self.response = views.MessagingDetailView.as_view()(
+            request, username=self.interlocutor.username
+        )
 
     def test_messaging_detail_view_basic(self):
         """
@@ -177,7 +179,9 @@ class TestMessagingCreateView(TestMessagingAjaxView, TestCase):
             HTTP_X_REQUESTED_WITH='XMLHttpRequest'
         )
         request.user = self.user
-        self.response = views.MessagingCreateView.as_view()(request)
+        self.response = views.MessagingCreateView.as_view()(
+            request, username=interlocutor.username
+        )
 
     def test_messaging_create_view_creates_message(self):
         """
@@ -224,7 +228,9 @@ class TestMessagingPullView(TestMessagingAjaxView, TestCase):
             HTTP_X_REQUESTED_WITH='XMLHttpRequest'
         )
         request.user = self.user
-        self.response = views.MessagingPullView.as_view()(request)
+        self.response = views.MessagingPullView.as_view()(
+            request, username=interlocutor.username
+        )
 
         self.new_messages = json.loads(self.response.content)
 
@@ -255,37 +261,6 @@ class TestMessagingPullView(TestMessagingAjaxView, TestCase):
                              'Should contain `timestamp`s of messages')
 
 
-class TestMessagingViewWithInterlocutor(TestCase):
-    """
-    A test case for a view `MessagingViewWithInterlocutor`
-    """
-    def setUp(self):
-        self.view = views.MessagingViewWithInterlocutor()
-
-    def test_get_interlocutor_returns_user(self):
-        """
-        Ensures that `MessagingViewWithInterlocutor` returns an
-        instance of `User`
-        """
-        user = User.objects.create(username='test', password='testpswd')
-        self.view.request = RequestFactory().get(
-            reverse('messaging:detail', args=[user.username])
-        )
-        self.assertEqual(self.view.get_interlocutor(), user,
-                         'Should return an instance of `User`')
-
-    def test_get_interlocutor_raises_404_if_user_not_exists(self):
-        """
-        Ensures that `MessagingViewWithInterlocutor` raises HTTP error
-        404 if a requested user does not exists
-        """
-        with self.assertRaises(Http404):
-            self.view.request = RequestFactory().get(
-                reverse('messaging:detail', args=['random_username'])
-            )
-            self.view.get_interlocutor()
-
-
 class TestMessagingUpdateUnreadCountView(TestMessagingAjaxView, TestCase):
     def setUp(self):
         interlocutor = User.objects.create(username='test1',
@@ -304,7 +279,9 @@ class TestMessagingUpdateUnreadCountView(TestMessagingAjaxView, TestCase):
             self.url, HTTP_X_REQUESTED_WITH='XMLHttpRequest'
         )
         request.user = self.user
-        self.response = views.MessagingUpdateUnreadCountView.as_view()(request)
+        self.response = views.MessagingUpdateUnreadCountView.as_view()(
+            request, username=interlocutor.username
+        )
 
         self.conversations_with_unread_count = json.loads(
             self.response.content
@@ -346,7 +323,9 @@ class TestMessagingResetUnreadCountView(TestMessagingAjaxView, TestCase):
             self.url, HTTP_X_REQUESTED_WITH='XMLHttpRequest'
         )
         request.user = self.user
-        self.response = views.MessagingResetUnreadCountView.as_view()(request)
+        self.response = views.MessagingResetUnreadCountView.as_view()(
+            request, username=interlocutor.username
+        )
 
     def test_messaging_reset_unread_count_view_reset_count(self):
         """
