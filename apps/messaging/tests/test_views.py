@@ -1,7 +1,6 @@
 import json
 
 from django.contrib.auth.models import User
-from django.http import Http404
 from django.core.urlresolvers import reverse
 from django.db.models.query import QuerySet
 from django.test import RequestFactory, TestCase
@@ -285,34 +284,3 @@ class TestMessagingPullView(TestCase):
                              'Should contain `sender`s of messages')
         self.assertIsNotNone(messages_data.get('timestamp', None),
                              'Should contain `timestamp`s of messages')
-
-
-class TestMessagingViewWithInterlocutor(TestCase):
-    """
-    A test case for a view `MessagingViewWithInterlocutor`
-    """
-    def setUp(self):
-        self.view = views.MessagingViewWithInterlocutor()
-
-    def test_get_interlocutor_returns_user(self):
-        """
-        Ensures that `MessagingViewWithInterlocutor` returns an
-        instance of `User`
-        """
-        user = User.objects.create(username='test', password='testpswd')
-        self.view.request = RequestFactory().get(
-            reverse('messaging:detail', args=[user.username])
-        )
-        self.assertEqual(self.view.get_interlocutor(), user,
-                         'Should return an instance of `User`')
-
-    def test_get_interlocutor_raises_404_if_user_not_exists(self):
-        """
-        Ensures that `MessagingViewWithInterlocutor` raises HTTP error
-        404 if a requested user does not exists
-        """
-        with self.assertRaises(Http404):
-            self.view.request = RequestFactory().get(
-                reverse('messaging:detail', args=['random_username'])
-            )
-            self.view.get_interlocutor()

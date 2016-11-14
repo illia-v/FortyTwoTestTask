@@ -44,20 +44,15 @@ class MessagingIndexView(TemplateView):
         return context
 
 
-class MessagingViewWithInterlocutor(object):
-    def get_interlocutor(self):
-        """Gets a `User` instance interlocutor from a path of a request"""
-        interlocutors_username = self.request.path.split('/')[2]
-        return get_object_or_404(User, username=interlocutors_username)
-
-
-class MessagingDetailView(MessagingViewWithInterlocutor, FormView):
+class MessagingDetailView(FormView):
     form_class = MessageForm
     template_name = 'messaging/detail.html'
 
     def get_messages(self):
         user = self.request.user
-        interlocutor = self.get_interlocutor()
+        interlocutor = get_object_or_404(
+            User, username=self.kwargs['username']
+        )
 
         try:
             conversation = Conversation.objects.filter(
@@ -75,11 +70,11 @@ class MessagingDetailView(MessagingViewWithInterlocutor, FormView):
     def get_context_data(self, **kwargs):
         context = super(MessagingDetailView, self).get_context_data(**kwargs)
         context['all_messages'] = self.get_messages()
-        context['interlocutor_username'] = self.get_interlocutor().username
+        context['interlocutor_username'] = self.kwargs['username']
         return context
 
 
-class MessagingCreateView(MessagingViewWithInterlocutor, CreateView):
+class MessagingCreateView(CreateView):
     def get(self, request, *args, **kwargs):
         return http.HttpResponseNotAllowed(['POST'])
 
@@ -93,7 +88,9 @@ class MessagingCreateView(MessagingViewWithInterlocutor, CreateView):
             conversation = Conversation.objects.filter(
                 interlocutors__exact=request.user
             ).select_related('message_set').get(
-                interlocutors__exact=self.get_interlocutor()
+                interlocutors__exact=get_object_or_404(
+                    User, username=self.kwargs['username']
+                )
             )
         except ObjectDoesNotExist:
             raise http.Http404
@@ -128,9 +125,11 @@ class MessagingCreateView(MessagingViewWithInterlocutor, CreateView):
             return http.HttpResponseBadRequest()
 
 
-class MessagingPullView(MessagingViewWithInterlocutor, View):
+class MessagingPullView(View):
     def get(self, request, *args, **kwargs):
-        interlocutor = self.get_interlocutor()
+        interlocutor = get_object_or_404(
+            User, username=self.kwargs['username']
+        )
 
         try:
             messages = Conversation.objects.filter(
