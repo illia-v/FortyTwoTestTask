@@ -18,7 +18,8 @@ class TestMessagingIndexView(TestCase):
     """
     def setUp(self):
         self.user = User.objects.create(username='test', password='testpswd')
-        request = RequestFactory().get('/messaging/')
+        self.url = reverse('messaging:index')
+        request = RequestFactory().get(self.url)
         request.user = self.user
         self.response = views.MessagingIndexView.as_view()(request)
 
@@ -37,7 +38,7 @@ class TestMessagingIndexView(TestCase):
         Ensures that `MessagingIndexView` is not accessed when user is
         not authenticated
         """
-        response_for_anonymous = self.client.get('/messaging/')
+        response_for_anonymous = self.client.get(self.url)
         self.assertIn('login', response_for_anonymous.url,
                       'Should redirect to login')
 
@@ -62,12 +63,14 @@ class TestMessagingDetailView(TestCase):
     def setUp(self):
         self.interlocutor = User.objects.create(username='test1',
                                                 password='testpswd')
-        request = RequestFactory().get(
-            '/messaging/%s/' % self.interlocutor.username
-        )
+        self.url = reverse('messaging:detail',
+                           args=[self.interlocutor.username])
+        request = RequestFactory().get(self.url)
         request.user = User.objects.create(username='test',
                                            password='testpswd')
-        self.response = views.MessagingDetailView.as_view()(request)
+        self.response = views.MessagingDetailView.as_view()(
+            request, username=self.interlocutor.username
+        )
 
     def test_messaging_detail_view_basic(self):
         """
@@ -84,9 +87,7 @@ class TestMessagingDetailView(TestCase):
         Ensures that `MessagesDetailView` is not accessed when user is not
         authenticated
         """
-        response_for_anonymous = self.client.get(
-            '/messaging/%s/' % self.interlocutor.username
-        )
+        response_for_anonymous = self.client.get(self.url)
         self.assertIn('login', response_for_anonymous.url,
                       'Should redirect to login')
 
@@ -139,7 +140,9 @@ class TestMessagingCreateView(TestCase):
             HTTP_X_REQUESTED_WITH='XMLHttpRequest'
         )
         request.user = self.user
-        self.response = views.MessagingCreateView.as_view()(request)
+        self.response = views.MessagingCreateView.as_view()(
+            request, username=interlocutor.username
+        )
 
     def test_messaging_create_view_basic(self):
         """
@@ -219,7 +222,9 @@ class TestMessagingPullView(TestCase):
             HTTP_X_REQUESTED_WITH='XMLHttpRequest'
         )
         request.user = self.user
-        self.response = views.MessagingPullView.as_view()(request)
+        self.response = views.MessagingPullView.as_view()(
+            request, username=interlocutor.username
+        )
 
         self.new_messages = json.loads(self.response.content)
 
