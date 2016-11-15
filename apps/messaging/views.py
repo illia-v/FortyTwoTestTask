@@ -6,7 +6,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.utils.formats import date_format
-from django.views.decorators.http import require_POST
 from django.views.generic import CreateView, FormView, TemplateView, View
 
 from .forms import MessageForm
@@ -113,7 +112,6 @@ class MessagingCreateView(CreateView):
                                  content_type='application/json')
 
     @method_decorator(ajax_request)
-    @method_decorator(require_POST)
     def dispatch(self, *args, **kwargs):
         return super(MessagingCreateView, self).dispatch(*args, **kwargs)
 
