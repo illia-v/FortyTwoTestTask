@@ -84,21 +84,22 @@ class MessagingCreateView(CreateView):
             return http.HttpResponse(json.dumps(form.errors),
                                      content_type='application/json')
 
+        interlocutor = get_object_or_404(
+            User, username=self.kwargs['username']
+        )
         try:
             conversation = Conversation.objects.filter(
                 interlocutors__exact=request.user
-            ).select_related('message_set').get(
-                interlocutors__exact=get_object_or_404(
-                    User, username=self.kwargs['username']
-                )
-            )
+            ).get(interlocutors__exact=interlocutor)
         except ObjectDoesNotExist:
-            raise http.Http404
+            conversation = Conversation.objects.create()
+            conversation.interlocutors.add(request.user, interlocutor)
+            conversation.save()
 
         message = Message.objects.create(
             conversation=conversation,
             sender=request.user,
-            body=self.get_message_body()
+            body=form.cleaned_data['message']
         )
 
         message_dict = {
