@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.utils.formats import date_format
+from django.views.decorators.http import require_POST
 from django.views.generic import CreateView, FormView, TemplateView, View
 
 from .forms import MessageForm
@@ -75,31 +76,26 @@ class MessagingDetailView(FormView):
 
 
 class MessagingCreateView(CreateView):
-    def get(self, request, *args, **kwargs):
-        return http.HttpResponseNotAllowed(['POST'])
+    form_class = MessageForm
+    model = Message
 
-    def post(self, request, *args, **kwargs):
-        form = self.get_form()
-        if not form.is_valid():
-            return http.HttpResponse(json.dumps(form.errors),
-                                     content_type='application/json')
-
+    def form_valid(self, form):
         interlocutor = get_object_or_404(
             User, username=self.kwargs['username']
         )
         try:
             conversation = Conversation.objects.filter(
-                interlocutors__exact=request.user
+                interlocutors__exact=self.request.user
             ).get(interlocutors__exact=interlocutor)
         except ObjectDoesNotExist:
             conversation = Conversation.objects.create()
-            conversation.interlocutors.add(request.user, interlocutor)
+            conversation.interlocutors.add(self.request.user, interlocutor)
             conversation.save()
 
         message = Message.objects.create(
             conversation=conversation,
-            sender=request.user,
-            body=form.cleaned_data['message']
+            sender=self.request.user,
+            body=form.cleaned_data['body']
         )
 
         message_dict = {
@@ -112,18 +108,14 @@ class MessagingCreateView(CreateView):
         return http.HttpResponse(json.dumps(message_dict),
                                  content_type='application/json')
 
+    def form_invalid(self, form):
+        return http.HttpResponse(json.dumps(form.errors),
+                                 content_type='application/json')
+
     @method_decorator(ajax_request)
+    @method_decorator(require_POST)
     def dispatch(self, *args, **kwargs):
         return super(MessagingCreateView, self).dispatch(*args, **kwargs)
-
-    def get_form(self):
-        return MessageForm({'message': self.get_message_body()})
-
-    def get_message_body(self):
-        try:
-            return self.request.POST['message']
-        except KeyError:
-            return http.HttpResponseBadRequest()
 
 
 class MessagingPullView(View):

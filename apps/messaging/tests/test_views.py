@@ -135,7 +135,7 @@ class TestMessagingCreateView(TestCase):
 
         request = RequestFactory().post(
             self.url,
-            {'message': 'Hello world!'},
+            {'body': 'Hello world!'},
             HTTP_X_REQUESTED_WITH='XMLHttpRequest'
         )
         request.user = self.user
