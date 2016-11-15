@@ -21,7 +21,7 @@ class TestMessageForm(TestCase):
         """
         Ensures that `MessageForm` is valid if sufficient data is given
         """
-        self.assertTrue(self.form(data={'message': 'Hello world!'}),
+        self.assertTrue(self.form(data={'body': 'Hello world!'}),
                         'Should be valid if sufficient data is given')
 
     def test_message_form_with_too_long_message(self):
@@ -29,7 +29,7 @@ class TestMessageForm(TestCase):
         Ensures that `MessageForm` is invalid if a message is too long
         """
         self.assertFalse(self.form(
-            data={'message': '    '.join(
+            data={'body': '    '.join(
                 (random.choice(string.ascii_lowercase) for i in range(127)))
             }).is_valid(),
             'Should be invalid if a message is too long'
