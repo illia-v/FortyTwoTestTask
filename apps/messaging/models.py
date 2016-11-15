@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.validators import MaxLengthValidator
 from django.db import models
 
 
@@ -14,7 +15,7 @@ class Message(models.Model):
     conversation = models.ForeignKey(Conversation)
     sender = models.ForeignKey(User)
     timestamp = models.DateTimeField(auto_now_add=True)
-    body = models.TextField(max_length=500)
+    body = models.TextField(validators=[MaxLengthValidator(500)])
     read = models.BooleanField(default=False)
 
     def __unicode__(self):
